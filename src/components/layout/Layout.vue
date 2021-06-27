@@ -25,7 +25,7 @@ export default defineComponent({
         { label: "友链", router: "/firend" },
       ],
     });
-    const currentMenu = ref<string[]>(["/"]); // 当前选中的菜单
+    const currentMenu = ref<string[]>(["/article"]); // 当前选中的菜单
 
     return {
       ...toRefs(state),
