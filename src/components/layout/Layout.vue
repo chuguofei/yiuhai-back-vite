@@ -6,7 +6,7 @@
       </router-link>
     </a-menu-item>
   </a-menu>
-  <div>
+  <div class="padding-5">
     <transition name="transitionRouter" mode="out-in">
       <router-view />
     </transition>

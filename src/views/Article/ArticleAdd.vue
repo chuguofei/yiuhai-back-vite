@@ -1,15 +1,23 @@
 <template>
+  <BaseTitle title="添加文章">
+    <template v-slot:btn-group>
+      <a-button class="margin-right-10" @click="backListMeth()">返回</a-button>
+      <a-button type="primary" @click="backListMeth()">提交</a-button>
+    </template>
+  </BaseTitle>
   <div class="article-view-box">
-   <div>
-       <a-button class="margin-right-10" @click="backListMeth()">返回</a-button>
-       <a-button  type="primary" @click="backListMeth()">提交</a-button>
-   </div>
     <a-form ref="formRef" :model="formState" :wrapper-col="{ span: 14 }">
       <a-form-item label="文章标题">
         <a-input v-model:value="formState.articleTitle" allowClear />
       </a-form-item>
       <a-form-item label="选择封面图片">
-        <a-upload list-type="picture" :multiple="false" :customRequest="handleChangeMeth" :before-upload="beforeUploadMeth"  v-model:file-list="fileList">
+        <a-upload
+          list-type="picture"
+          :multiple="false"
+          :customRequest="handleChangeMeth"
+          :before-upload="beforeUploadMeth"
+          v-model:file-list="fileList"
+        >
           <a-button><upload-outlined></upload-outlined>选择封面图片</a-button>
         </a-upload>
       </a-form-item>
@@ -106,10 +114,10 @@ import { message as Message } from "ant-design-vue";
 import { CloseOutlined, UploadOutlined } from "@ant-design/icons-vue";
 export default defineComponent({
   components: { BaseTitle, CloseOutlined, UploadOutlined },
-  props:{
-    isAdd:Boolean
+  props: {
+    isAdd: Boolean,
   },
-  setup(props,ctx) {
+  setup(props, ctx) {
     const formState = reactive({
       articleTitle: "",
       articleExplain: "",
@@ -157,30 +165,30 @@ export default defineComponent({
     };
 
     interface FileItem {
-        uid: string;
-        name?: string;
-        status?: string;
-        response?: string;
-        url?: string;
-        preview?: string;
-        originFileObj?: any;
-        file: string | Blob;
+      uid: string;
+      name?: string;
+      status?: string;
+      response?: string;
+      url?: string;
+      preview?: string;
+      originFileObj?: any;
+      file: string | Blob;
     }
     // 上传文件的列表
     const fileList = ref<FileItem[]>([]);
     const beforeUploadMeth = (file: FileItem) => {
-      const isJpgOrPng = file.type === 'image/jpeg' || file.type === 'image/png';
+      const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";
       if (!isJpgOrPng) {
-        Message.error('不是图片类型');
+        Message.error("不是图片类型");
         return true;
       }
       const isLt2M = file.size / 1024 / 1024 < 5;
       if (!isLt2M) {
-        Message.error('图片大小不能超过5M!');
+        Message.error("图片大小不能超过5M!");
         return true;
       }
-      if(fileList.value.length > 0){
-        Message.error('只能上传一张封面图!');
+      if (fileList.value.length > 0) {
+        Message.error("只能上传一张封面图!");
         return true;
       }
 
@@ -189,7 +197,7 @@ export default defineComponent({
     };
     // 上传封面图方法
     const handleChangeMeth = () => {
-      console.log(fileList.value)
+      console.log(fileList.value);
       // let fileList = [...info.fileList];
       // let file = fileList[0].originFileObj
       // // 开始上传
@@ -199,14 +207,21 @@ export default defineComponent({
     };
 
     // 返回列表
-    const backListMeth = ()=>{
-      ctx.emit("CallBack", false)
-    }
+    const backListMeth = () => {
+      ctx.emit("CallBack", false);
+    };
 
     // 导出method
-    const Method = { backListMeth , beforeUploadMeth, handleChangeMeth, addTagMeth, removeOneTagMeth, radioSwitchMeth };
+    const Method = {
+      backListMeth,
+      beforeUploadMeth,
+      handleChangeMeth,
+      addTagMeth,
+      removeOneTagMeth,
+      radioSwitchMeth,
+    };
 
-    return { fileList,formState, visibleState, formTagInput, ...Method };
+    return { fileList, formState, visibleState, formTagInput, ...Method };
   },
 });
 </script>
