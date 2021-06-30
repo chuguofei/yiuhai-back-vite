@@ -106,7 +106,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, ref } from "vue";
+import { defineComponent, reactive, ref, toRefs } from "vue";
 
 import BaseTitle from "@/components/BaseTitle.vue";
 import { message as Message } from "ant-design-vue";
@@ -114,7 +114,7 @@ import { message as Message } from "ant-design-vue";
 import { CloseOutlined, UploadOutlined } from "@ant-design/icons-vue";
 
 // api
-import Aritcle from '../../api/aritcle';
+import Aritcle from "../../api/aritcle";
 export default defineComponent({
   components: { BaseTitle, CloseOutlined, UploadOutlined },
   props: {
@@ -154,7 +154,6 @@ export default defineComponent({
 
     // 删除标签
     const removeOneTagMeth = (index: number) => {
-      console.log(index);
       formState.articleTags.splice(index, 1);
     };
 
@@ -215,11 +214,22 @@ export default defineComponent({
     };
 
     // 提交
-    const submitHandle = ()=>{
-      // Aritcle.addOneAritcle({
-        
-      // });
-    }
+    const submitHandle = () => {
+      const articleTags = formState.articleTags.join("|");
+      Aritcle.addOneAritcle({
+        articleTitle: formState.articleTitle,
+        articleExplain: formState.articleExplain,
+        articleTags,
+        articleCategoryId: formState.articleCategoryId,
+        articleContent: formState.articleContent,
+        articleImg: formState.articleImg,
+        isTop: formState.isTop,
+        isPrivate: formState.isPrivate,
+        isExternalLink: formState.isExternalLink,
+        externalLinkUrl: formState.externalLinkUrl,
+        isRelease: formState.isRelease,
+      }).then((result) => {});
+    };
 
     // 导出method
     const Method = {
@@ -229,7 +239,7 @@ export default defineComponent({
       addTagMeth,
       removeOneTagMeth,
       radioSwitchMeth,
-      submitHandle
+      submitHandle,
     };
 
     return { fileList, formState, visibleState, formTagInput, ...Method };

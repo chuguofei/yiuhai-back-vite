@@ -1,5 +1,5 @@
 <template>
-  <a-menu v-model:selectedKeys="currentMenu" mode="horizontal" >
+  <a-menu v-model:selectedKeys="currentMenu" mode="horizontal">
     <a-menu-item :key="item.router" v-for="item in menuBarArr">
       <router-link :to="item.router">
         {{ item.label }}
@@ -7,9 +7,14 @@
     </a-menu-item>
   </a-menu>
   <div class="padding-5">
-    <transition name="transitionRouter" mode="out-in">
+    <!-- <transition name="transitionRouter" mode="out-in">
       <router-view />
-    </transition>
+    </transition> -->
+    <router-view v-slot="{ Component }">
+      <transition>
+        <component :is="Component" />
+      </transition>
+    </router-view>
   </div>
 </template>
 <script lang="ts">
@@ -38,7 +43,7 @@ export default defineComponent({
 <style>
 .transitionRouter-enter-active,
 .transitionRouter-leave-active {
-  transition: all .1s ease-in;
+  transition: all 0.1s ease-in;
 }
 
 .transitionRouter-enter,

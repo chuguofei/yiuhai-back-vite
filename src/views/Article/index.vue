@@ -5,14 +5,15 @@
     </div>
     <a-table :columns="columns" :data-source="data" :pagination="false"> </a-table>
   </div>
-  <ArticleAddCom @CallBack="CallBack" v-else/>
+  <ArticleAddCom @CallBack="CallBack" v-else />
 </template>
 <script lang="ts">
 import { SmileOutlined, DownOutlined } from "@ant-design/icons-vue";
 import { defineComponent, toRefs, onMounted, reactive } from "vue";
 import ArticleAddCom from "./ArticleAdd.vue";
 // api
-import Aritcle from '../../api/aritcle';
+import Aritcle from "@/api/aritcle.ts";
+import Category from "@/api/category.ts";
 const columns = [
   {
     title: "Age",
@@ -62,15 +63,17 @@ export default defineComponent({
       isAdd: false,
     });
 
-    const CallBack = (flag:Boolean)=>{
-        dataState.isAdd = flag
-    }
+    const CallBack = (flag: Boolean) => {
+      dataState.isAdd = flag;
+    };
 
-    onMounted(()=>{
-
-      Aritcle.getAritcleListApi().then(res=>{
+    onMounted(() => {
+      Category.getCategoryListApi().then(res=>{
         console.log(res)
       })
+      Aritcle.getAritcleListApi().then((res) => {
+        console.log(res);
+      });
     });
 
     return {
@@ -83,7 +86,7 @@ export default defineComponent({
   components: {
     SmileOutlined,
     DownOutlined,
-    ArticleAddCom
+    ArticleAddCom,
   },
 });
 </script>

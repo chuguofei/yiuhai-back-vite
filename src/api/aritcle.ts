@@ -1,30 +1,30 @@
-import request from './index';
+import request from '.';
 
 class Aritcle {
 
     /**
-     * @description 添加一片博客
+     * @description 添加一片博客
      * @param data 
      * @returns 
      */
-    public addOneAritcle(params:Aritcle.AritcleStruct) : Promise<CallBack.Response> {
+    public addOneAritcle(data: Aritcle.AritcleStruct) {
         return request.axios({
-            url:"/api/port/article/ArtClassData",
-            method:"post",
-            params
+            url: "/api/blogArticle/addArticleOne",
+            method: "post",
+            data
         });
     }
 
     /**
      * @description 查询列表
-     * @param params 
+     * @param data 
      * @returns 
      */
-    public getAritcleListApi(params?:Aritcle.AritcleStruct):Promise<CallBack.Response>{
+    public getAritcleListApi(data?: Aritcle.AritcleStruct) {
         return request.axios({
-            url:"/api/blogArticle/getArticleList",
-            method:"post",
-            params
+            url: "/api/blogArticle/getArticleList",
+            method: "post",
+            data
         })
     }
 
