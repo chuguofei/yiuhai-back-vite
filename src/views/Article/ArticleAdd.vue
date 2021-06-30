@@ -4,7 +4,7 @@
        <a-button class="margin-right-10" @click="backListMeth()">返回</a-button>
        <a-button  type="primary" @click="backListMeth()">提交</a-button>
    </div>
-    <a-form ref="formRef" :model="formState" :wrapper-col="{ span: 14 }">
+    <a-form ref="formRef" :model="formState" :wrapper-col="{ span: 24 }">
       <a-form-item label="文章标题">
         <a-input v-model:value="formState.articleTitle" allowClear />
       </a-form-item>
