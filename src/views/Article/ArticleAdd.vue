@@ -2,11 +2,11 @@
   <BaseTitle title="添加文章">
     <template v-slot:btn-group>
       <a-button class="margin-right-10" @click="backListMeth()">返回</a-button>
-      <a-button type="primary" @click="backListMeth()">提交</a-button>
+      <a-button type="primary" @click="submitHandle()">提交</a-button>
     </template>
   </BaseTitle>
   <div class="article-view-box">
-    <a-form ref="formRef" :model="formState" :wrapper-col="{ span: 14 }">
+    <a-form ref="formRef" :model="formState" :wrapper-col="{ span: 20 }">
       <a-form-item label="文章标题">
         <a-input v-model:value="formState.articleTitle" allowClear />
       </a-form-item>
@@ -112,6 +112,9 @@ import BaseTitle from "@/components/BaseTitle.vue";
 import { message as Message } from "ant-design-vue";
 
 import { CloseOutlined, UploadOutlined } from "@ant-design/icons-vue";
+
+// api
+import Aritcle from '../../api/aritcle';
 export default defineComponent({
   components: { BaseTitle, CloseOutlined, UploadOutlined },
   props: {
@@ -211,6 +214,13 @@ export default defineComponent({
       ctx.emit("CallBack", false);
     };
 
+    // 提交
+    const submitHandle = ()=>{
+      // Aritcle.addOneAritcle({
+        
+      // });
+    }
+
     // 导出method
     const Method = {
       backListMeth,
@@ -219,6 +229,7 @@ export default defineComponent({
       addTagMeth,
       removeOneTagMeth,
       radioSwitchMeth,
+      submitHandle
     };
 
     return { fileList, formState, visibleState, formTagInput, ...Method };

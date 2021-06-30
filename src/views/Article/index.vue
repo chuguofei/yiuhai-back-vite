@@ -9,8 +9,10 @@
 </template>
 <script lang="ts">
 import { SmileOutlined, DownOutlined } from "@ant-design/icons-vue";
-import { defineComponent, toRefs, reactive } from "vue";
-import ArticleAddCom from "./ArticleAdd";
+import { defineComponent, toRefs, onMounted, reactive } from "vue";
+import ArticleAddCom from "./ArticleAdd.vue";
+// api
+import Aritcle from '../../api/aritcle';
 const columns = [
   {
     title: "Age",
@@ -63,6 +65,13 @@ export default defineComponent({
     const CallBack = (flag:Boolean)=>{
         dataState.isAdd = flag
     }
+
+    onMounted(()=>{
+
+      Aritcle.getAritcleListApi().then(res=>{
+        console.log(res)
+      })
+    });
 
     return {
       ...toRefs(dataState),
