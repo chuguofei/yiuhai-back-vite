@@ -7,7 +7,7 @@ declare namespace CallBack {
     export interface Response {
         code:number,
         msg:string,
-        data:object,
+        data:Object,
     }
 
 }

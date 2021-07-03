@@ -1,4 +1,5 @@
 import request from '.';
+import { RequestMethType } from '../struct/common/request-meth-type'
 
 class Category {
 
@@ -7,9 +8,10 @@ class Category {
      * @param data 
      * @returns 
      */
-    public addOneCategoryApi(data: Category.CategoryStruct) {
+    public addOneOrEditCategoryApi(type: RequestMethType, data: Category.CategoryStruct) {
+        let url = type == RequestMethType.Add ? `/api/blogArticleCategory/addOneCategory` : `/api/blogArticleCategory/editOneCategory`;
         return request.axios({
-            url: "/api/blogArticleCategory/addOneCategory",
+            url,
             method: "post",
             data,
         });
@@ -26,6 +28,17 @@ class Category {
             method: "post",
             data: data || {},
         });
+    }
+
+    /**
+     * 删除一个分类
+     * @param data 
+     */
+    public delOneCategoryApi(id: number) {
+        return request.axios({
+            url: `/api/blogArticleCategory/delOneCategory/${id}`,
+            method: "delete",
+        })
     }
 
 }

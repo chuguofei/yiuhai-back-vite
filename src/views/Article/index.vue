@@ -68,10 +68,10 @@ export default defineComponent({
     };
 
     onMounted(() => {
-      Category.getCategoryListApi().then(res=>{
+      Category.getCategoryListApi().then((res:any)=>{
         console.log(res)
       })
-      Aritcle.getAritcleListApi().then((res) => {
+      Aritcle.getAritcleListApi().then((res:any) => {
         console.log(res);
       });
     });
