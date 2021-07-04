@@ -11,7 +11,7 @@ export default class MyAxios {
             timeout: 5000,
             withCredentials: false, // 表示跨域请求时是否需要使用凭证
             headers: {
-                'Content-Type': 'application/json',
+                'Content-Type': 'application/json;charset=utf-8',
                 'Cache-Control': 'no-cache',
             }
         })

@@ -13,6 +13,7 @@
     "highlight.js": "^11.0.1",
     "lodash-es": "^4.17.21",
     "prismjs": "^1.23.0",
+    "qs": "^6.10.1",
     "vue": "^3.0.5",
     "vue-router": "4.x",
     "vuex": "4.x"

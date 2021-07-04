@@ -91,11 +91,11 @@
         <a-input v-model:value="formState.externalLinkUrl" allowClear />
       </a-form-item>
       <a-form-item label="文章分类">
-        <a-select v-model:value="formState.articleCategoryId" ref="select">
-          <a-select-option value="">Java</a-select-option>
-          <a-select-option value="">Vue</a-select-option>
-          <a-select-option value="">React</a-select-option>
-          <a-select-option value="">全站</a-select-option>
+        <a-select v-model:value="formState.articleCategoryId" ref="select" allowClear>
+          <a-select-option
+            v-for="item in categoryOptions"
+            :value="item.id"
+          >{{item.categoryName}}</a-select-option>
         </a-select>
       </a-form-item>
       <a-form-item label="文章MD"></a-form-item>
@@ -106,7 +106,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, ref, toRefs } from "vue";
+import { defineComponent, reactive, ref, toRefs, onMounted } from "vue";
 
 import BaseTitle from "@/components/BaseTitle.vue";
 import { message as Message } from "ant-design-vue";
@@ -115,6 +115,7 @@ import { CloseOutlined, UploadOutlined } from "@ant-design/icons-vue";
 
 // api
 import Aritcle from "../../api/aritcle";
+import Category from "@/api/category.ts";
 export default defineComponent({
   components: { BaseTitle, CloseOutlined, UploadOutlined },
   props: {
@@ -135,17 +136,38 @@ export default defineComponent({
       isRelease: true,
     });
 
-    let formTagInput = ref("");
+    let formTagInput = ref<string>("");
 
     // 显示隐藏
     const visibleState = reactive({});
 
+    /// options
+    const selectOptionsState = reactive({
+      categoryOptions: [],
+    });
+
+    // hook
+
+    onMounted(() => {
+      initDataMeth();
+    });
+
     /// Method
+    const initDataMeth = () => {
+      Category.getAllListApi().then((res: any) => {
+        selectOptionsState.categoryOptions = res.data;
+        console.log(selectOptionsState.categoryOptions)
+      });
+    };
 
     // 添加标签
     const addTagMeth = () => {
       if (formTagInput.value.length == 0) {
         Message.error("请输入标签");
+        return;
+      }
+      if(formState.articleTags.includes(formTagInput.value)){
+        Message.error("该标签已存在");
         return;
       }
       formState.articleTags.push(formTagInput.value);
@@ -242,7 +264,13 @@ export default defineComponent({
       submitHandle,
     };
 
-    return { fileList, formState, visibleState, formTagInput, ...Method };
+    const States = {
+      formState,
+      visibleState,
+      formTagInput,
+    };
+
+    return { fileList, ...toRefs(selectOptionsState), ...States , ...Method };
   },
 });
 </script>
@@ -269,4 +297,8 @@ export default defineComponent({
     border-radius: 5px;
   }
 }
+// LTAI5tECiEF1XwR4g8UMT6Bc
+// 4aMaR08nvFv31h38gyPvp7rsaacnuL
 </style>
+
+

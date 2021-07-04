@@ -12,11 +12,12 @@
       :data-source="tableInfo.tableData"
       :rowKey="(row) => row.id"
       :pagination="false"
+      :loading="tableInfo.loading"
     >
       <template #id="{ text }">{{ text.id }}</template>
       <template #handle="{ record }">
         <a-button
-          @click="btnHandleMeth('edit',record)"
+          @click="btnHandleMeth('edit', record)"
           class="margin-right-5"
           type="primary"
           >修改</a-button
@@ -36,18 +37,17 @@
         show-size-changer
         :default-current="tableInfo.queryParams.current"
         :total="tableInfo.queryParams.total"
-        @showSizeChange="initListDataMeth"
+        :page-size="tableInfo.queryParams.size"
+        @showSizeChange="onShowSizeChangeMeth"
+        @change="onShowSizeChangeMeth"
       />
     </div>
-    
+
     <!-- 添加 ｜ 修改 -->
     <a-modal v-model:visible="isAdd" title="添加菜单" @ok="submitHandle">
       <a-form ref="formRef" :model="CategoryInfo" :rules="rules">
         <a-form-item label="分类名称" name="categoryName">
-          <a-input
-            v-model:value="CategoryInfo.categoryName"
-            placeholder="分类名称"
-          />
+          <a-input v-model:value="CategoryInfo.categoryName" placeholder="分类名称" />
         </a-form-item>
       </a-form>
     </a-modal>
@@ -57,7 +57,7 @@
 <script lang="ts">
 import { message as Message } from "ant-design-vue";
 import BaseTitle from "@/components/BaseTitle.vue";
-import { RequestMethType } from '../struct/common/request-meth-type';
+import { RequestMethType } from "../struct/common/request-meth-type";
 import { reactive, toRefs, ref, onMounted } from "vue";
 import { cloneDeep } from "lodash-es";
 // api
@@ -67,9 +67,9 @@ export default {
   setup() {
     const formRef = ref();
     let formState = reactive({
-      title:"",
+      title: "",
       // 表单提交的信息
-      CategoryInfo:{
+      CategoryInfo: {
         id: null,
         categoryName: "",
       },
@@ -104,11 +104,12 @@ export default {
           slots: { customRender: "handle" },
         },
       ],
+      loading: false,
       tableData: [],
-      queryParams:{
-        total:0,
-        current:0,
-        size:10,
+      queryParams: {
+        total: 0,
+        current: 0,
+        size: 10,
       },
     });
 
@@ -121,52 +122,68 @@ export default {
       formRef.value
         .validate()
         .then(() => {
-          let methods_type = !!!formState.CategoryInfo.id ? RequestMethType.Add : RequestMethType.Edit;
-          Category.addOneOrEditCategoryApi(methods_type,formState.CategoryInfo).then((res: any) => {
-            formRef.value.resetFields();
-            flagVisible.isAdd = false;
-            initListDataMeth();
-            Message.success(`${methods_type == RequestMethType.Add ? '添加':"修改"}成功`);
-          });
+          let methods_type = !!!formState.CategoryInfo.id
+            ? RequestMethType.Add
+            : RequestMethType.Edit;
+          Category.addOneOrEditCategoryApi(methods_type, formState.CategoryInfo).then(
+            (res: any) => {
+              formRef.value.resetFields();
+              flagVisible.isAdd = false;
+              initListDataMeth();
+              Message.success(
+                `${methods_type == RequestMethType.Add ? "添加" : "修改"}成功`
+              );
+            }
+          );
         })
         .catch((error: any) => {});
     };
 
     // 统一按钮点击
-    const btnHandleMeth = (type:string,rowItem?:any)=>{
+    const btnHandleMeth = (type: string, rowItem?: any) => {
       resetFormMeth();
-      if(type == 'add'){
+      if (type == "add") {
         formState.title = "添加分类";
         flagVisible.isAdd = true;
-      } else if(type == 'edit'){
+      } else if (type == "edit") {
         formState.CategoryInfo = cloneDeep(rowItem);
-        formState.title = "修改分类"
+        formState.title = "修改分类";
         flagVisible.isAdd = true;
       }
-      
-    }
+    };
 
     // 获取列表数据
+    const onShowSizeChangeMeth = (current: number, pageSize: number) => {
+      tableInfo.queryParams.current = current;
+      tableInfo.queryParams.size = pageSize;
+      initListDataMeth();
+    };
     const initListDataMeth = () => {
-      Category.getCategoryListApi(tableInfo.queryParams).then((res: CallBack.Response) => {
-        tableInfo.tableData = res.data as any;
-      });
+      tableInfo.loading = true;
+      Category.getCategoryListApi(tableInfo.queryParams).then(
+        (res: CallBack.ResponseTable) => {
+          tableInfo.loading = false;
+          tableInfo.tableData = res.data.records as any;
+          tableInfo.queryParams.total = res.data.total;
+        }
+      );
     };
 
     // 删除
     const delOneCategoryMeth = (id: number) => {
       Category.delOneCategoryApi(id).then((res: CallBack.Response) => {
         initListDataMeth();
+        Message.success("删除成功");
       });
     };
 
     // 重置表单
-    const resetFormMeth = ()=>{
+    const resetFormMeth = () => {
       formState.CategoryInfo = {
         id: null,
         categoryName: "",
-      }
-    }
+      };
+    };
 
     // hook
     onMounted(() => {
@@ -174,7 +191,12 @@ export default {
     });
 
     // method export
-    const Method = { btnHandleMeth,submitHandle, delOneCategoryMeth };
+    const Method = {
+      onShowSizeChangeMeth,
+      btnHandleMeth,
+      submitHandle,
+      delOneCategoryMeth,
+    };
 
     return {
       ...toRefs(flagVisible),

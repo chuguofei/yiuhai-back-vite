@@ -10,17 +10,28 @@
     <!-- <transition name="transitionRouter" mode="out-in">
       <router-view />
     </transition> -->
-    <router-view v-slot="{ Component }">
-      <transition>
-        <component :is="Component" />
-      </transition>
-    </router-view>
+    <a-config-provider :locale="zh_CN">
+      <router-view v-slot="{ Component }">
+        <transition>
+          <component :is="Component" />
+        </transition>
+      </router-view>
+    </a-config-provider>
   </div>
 </template>
+
 <script lang="ts">
-import { defineComponent, ref, toRefs, reactive } from "vue";
+import { defineComponent, ref, toRefs, reactive, getCurrentInstance } from "vue";
+import zh_CN from "ant-design-vue/lib/locale-provider/zh_CN";
 export default defineComponent({
+  data() {
+    return {
+      zh_CN,
+    };
+  },
   setup() {
+    const { proxy }: any = getCurrentInstance();
+    const currentPath = proxy.$router.currentRoute.value.path;
     const state = reactive({
       menuBarArr: [
         { label: "首页", router: "/" },
@@ -30,7 +41,7 @@ export default defineComponent({
         { label: "友链", router: "/firend" },
       ],
     });
-    const currentMenu = ref<string[]>(["/article"]); // 当前选中的菜单
+    const currentMenu = ref<string[]>([currentPath]); // 当前选中的菜单
 
     return {
       ...toRefs(state),

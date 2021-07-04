@@ -63,21 +63,24 @@ export default defineComponent({
       isAdd: false,
     });
 
+    // select options 数据
+    const selectOptionsState = reactive({
+      categoryOptions:[],
+    });
+
     const CallBack = (flag: Boolean) => {
       dataState.isAdd = flag;
     };
 
     onMounted(() => {
-      Category.getCategoryListApi().then((res:any)=>{
-        console.log(res)
+      Category.getAllListApi().then((res:any)=>{
+        selectOptionsState.categoryOptions = res.data;
       })
-      Aritcle.getAritcleListApi().then((res:any) => {
-        console.log(res);
-      });
     });
 
     return {
       ...toRefs(dataState),
+      ...toRefs(selectOptionsState),
       data,
       columns,
       CallBack,
