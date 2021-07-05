@@ -156,6 +156,11 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-15.12.4.tgz#e1cf817d70a1e118e81922c4ff6683ce9d422e26"
   integrity sha512-zrNj1+yqYF4WskCMOHwN+w9iuD12+dGm0rQ35HLl9/Ouuq52cEtd0CH9qMgrdNmi5ejC1/V7vKEXYubB+65DkA==
 
+"@types/uuid@^8.0.0":
+  version "8.3.1"
+  resolved "https://registry.yarnpkg.com/@types/uuid/-/uuid-8.3.1.tgz#1a32969cf8f0364b3d8c8af9cc3555b7805df14f"
+  integrity sha512-Y2mHTRAbqfFkpjldbkHGY8JIzRN6XqYRliG8/24FcHm2D2PwW24fl5xMRTVGdrb7iMrwCaIEbLWerGIkXuFWVg==
+
 "@vitejs/plugin-vue@^1.2.3":
   version "1.2.3"
   resolved "https://registry.yarnpkg.com/@vitejs/plugin-vue/-/plugin-vue-1.2.3.tgz#2e8e008b1cc3a6ad1dfbec75743c7ffd9b4872a6"
@@ -2648,6 +2653,11 @@ util-deprecate@^1.0.2:
   resolved "https://registry.yarnpkg.com/util-deprecate/-/util-deprecate-1.0.2.tgz#450d4dc9fa70de732762fbd2d4a28981419a0ccf"
   integrity sha1-RQ1Nyfpw3nMnYvvS1KKJgUGaDM8=
 
+uuid@^8.1.0:
+  version "8.3.2"
+  resolved "https://registry.yarnpkg.com/uuid/-/uuid-8.3.2.tgz#80d5b5ced271bb9af6c445f21a1a04c606cefbe2"
+  integrity sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==
+
 vite-plugin-style-import@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/vite-plugin-style-import/-/vite-plugin-style-import-1.0.0.tgz#344b7f14bcb5aefeb730d3192012c19a0604bb5e"
@@ -2684,6 +2694,14 @@ vue-types@^3.0.0:
   integrity sha512-IwUC0Aq2zwaXqy74h4WCvFCUtoV0iSWr0snWnE9TnU18S66GAQyqQbRf2qfJtUuiFsBf6qp0MEwdonlwznlcrw==
   dependencies:
     is-plain-object "3.0.1"
+
+vue-uuid@^2.0.2:
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/vue-uuid/-/vue-uuid-2.0.2.tgz#0cfb739e660a3af1d4e3342743578114f79b2438"
+  integrity sha512-PRf1CHg3uKi77bVRyAuW2u/T2PO9LxMr7cw9t9rNdpZTkNDyw1Fx6eJVL+8JOtM9VxxPkoZ/rwhXJ5l+X5AYzQ==
+  dependencies:
+    "@types/uuid" "^8.0.0"
+    uuid "^8.1.0"
 
 vue@^3.0.0, vue@^3.0.5:
   version "3.1.2"

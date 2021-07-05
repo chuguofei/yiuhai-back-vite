@@ -11,7 +11,6 @@
         <a-input v-model:value="formState.articleTitle" allowClear />
       </a-form-item>
       <a-form-item label="选择封面图片">
-        {{fileList}}
         <a-upload
           list-type="picture"
           :multiple="false"
@@ -93,10 +92,9 @@
       </a-form-item>
       <a-form-item label="文章分类">
         <a-select v-model:value="formState.articleCategoryId" ref="select" allowClear>
-          <a-select-option
-            v-for="item in categoryOptions"
-            :value="item.id"
-          >{{item.categoryName}}</a-select-option>
+          <a-select-option v-for="item in categoryOptions" :value="item.id">{{
+            item.categoryName
+          }}</a-select-option>
         </a-select>
       </a-form-item>
       <a-form-item label="文章MD"></a-form-item>
@@ -108,7 +106,7 @@
 
 <script lang="ts">
 import { defineComponent, reactive, ref, toRefs, onMounted } from "vue";
-
+import { uuid } from "vue-uuid";
 import BaseTitle from "@/components/BaseTitle.vue";
 import { message as Message } from "ant-design-vue";
 
@@ -117,8 +115,7 @@ import { CloseOutlined, UploadOutlined } from "@ant-design/icons-vue";
 // api
 import Aritcle from "../../api/aritcle";
 import Category from "@/api/category.ts";
-import Base from '@/api/base.ts';
-import BaseStruct from '../../struct/oss-policy.d.ts';
+import Base from "@/api/base.ts";
 export default defineComponent({
   components: { BaseTitle, CloseOutlined, UploadOutlined },
   props: {
@@ -168,7 +165,7 @@ export default defineComponent({
         Message.error("请输入标签");
         return;
       }
-      if(formState.articleTags.includes(formTagInput.value)){
+      if (formState.articleTags.includes(formTagInput.value)) {
         Message.error("该标签已存在");
         return;
       }
@@ -196,30 +193,39 @@ export default defineComponent({
       const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";
       if (!isJpgOrPng) {
         Message.error("不是图片类型");
-        return false;
       }
       const isLt2M = file.size / 1024 / 1024 < 5;
       if (!isLt2M) {
         Message.error("图片大小不能超过5M!");
-        return false;
       }
       if (fileList.value.length > 0) {
         Message.error("只能上传一张封面图!");
-        return false;
       }
 
-      return true;
-      // fileList.value = [...fileList.value, file];
+      return isJpgOrPng && isLt2M && fileList.value.length < 1;
     };
 
-    const handleChangeMeth = (file:any) => {
-      Base.getOssPolicy().then((result:CallBack.Response)=>{
-        let ossPolicy = result.data as BaseStruct.OssPolicy;
-        console.log(ossPolicy)
-      })
-      // console.log(file)
-    }
-   
+    const handleChangeMeth = (file: any) => {
+      const _uuid = uuid.v1();
+      const imgItem = {
+        name: _uuid,
+        status: "uploading",
+        url: "",
+        percent: 99,
+      };
+      fileList.value = [imgItem];
+      Base.ossUploadApi(file.file,_uuid).then((res: any) => {
+        console.log(res);
+        const imgItem = {
+          uid: _uuid,
+          name: _uuid,
+          status: "done",
+          url: res,
+          percent: 100,
+        };
+        fileList.value = [imgItem];
+      });
+    };
 
     // 返回列表
     const backListMeth = () => {
@@ -261,7 +267,7 @@ export default defineComponent({
       formTagInput,
     };
 
-    return { fileList, ...toRefs(selectOptionsState), ...States , ...Method };
+    return { fileList, ...toRefs(selectOptionsState), ...States, ...Method };
   },
 });
 </script>
@@ -291,5 +297,3 @@ export default defineComponent({
 // LTAI5tECiEF1XwR4g8UMT6Bc
 // 4aMaR08nvFv31h38gyPvp7rsaacnuL
 </style>
-
-

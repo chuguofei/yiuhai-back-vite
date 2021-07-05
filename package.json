@@ -16,6 +16,7 @@
     "qs": "^6.10.1",
     "vue": "^3.0.5",
     "vue-router": "4.x",
+    "vue-uuid": "^2.0.2",
     "vuex": "4.x"
   },
   "devDependencies": {
