@@ -11,11 +11,12 @@
         <a-input v-model:value="formState.articleTitle" allowClear />
       </a-form-item>
       <a-form-item label="选择封面图片">
+        {{fileList}}
         <a-upload
           list-type="picture"
           :multiple="false"
+          :beforeUpload="beforeUploadMeth"
           :customRequest="handleChangeMeth"
-          :before-upload="beforeUploadMeth"
           v-model:file-list="fileList"
         >
           <a-button><upload-outlined></upload-outlined>选择封面图片</a-button>
@@ -116,6 +117,8 @@ import { CloseOutlined, UploadOutlined } from "@ant-design/icons-vue";
 // api
 import Aritcle from "../../api/aritcle";
 import Category from "@/api/category.ts";
+import Base from '@/api/base.ts';
+import BaseStruct from '../../struct/oss-policy.d.ts';
 export default defineComponent({
   components: { BaseTitle, CloseOutlined, UploadOutlined },
   props: {
@@ -156,7 +159,6 @@ export default defineComponent({
     const initDataMeth = () => {
       Category.getAllListApi().then((res: any) => {
         selectOptionsState.categoryOptions = res.data;
-        console.log(selectOptionsState.categoryOptions)
       });
     };
 
@@ -188,47 +190,36 @@ export default defineComponent({
       }
     };
 
-    interface FileItem {
-      uid: string;
-      name?: string;
-      status?: string;
-      response?: string;
-      url?: string;
-      preview?: string;
-      originFileObj?: any;
-      file: string | Blob;
-    }
     // 上传文件的列表
-    const fileList = ref<FileItem[]>([]);
-    const beforeUploadMeth = (file: FileItem) => {
+    const fileList = ref<any[]>([]);
+    const beforeUploadMeth = (file: any) => {
       const isJpgOrPng = file.type === "image/jpeg" || file.type === "image/png";
       if (!isJpgOrPng) {
         Message.error("不是图片类型");
-        return true;
+        return false;
       }
       const isLt2M = file.size / 1024 / 1024 < 5;
       if (!isLt2M) {
         Message.error("图片大小不能超过5M!");
-        return true;
+        return false;
       }
       if (fileList.value.length > 0) {
         Message.error("只能上传一张封面图!");
-        return true;
+        return false;
       }
 
-      fileList.value = [...fileList.value, file];
-      return false;
+      return true;
+      // fileList.value = [...fileList.value, file];
     };
-    // 上传封面图方法
-    const handleChangeMeth = () => {
-      console.log(fileList.value);
-      // let fileList = [...info.fileList];
-      // let file = fileList[0].originFileObj
-      // // 开始上传
-      // const formData = new FormData();
-      // formData.append("file", file);
-      // 开始上传 axios
-    };
+
+    const handleChangeMeth = (file:any) => {
+      Base.getOssPolicy().then((result:CallBack.Response)=>{
+        let ossPolicy = result.data as BaseStruct.OssPolicy;
+        console.log(ossPolicy)
+      })
+      // console.log(file)
+    }
+   
 
     // 返回列表
     const backListMeth = () => {
@@ -257,11 +248,11 @@ export default defineComponent({
     const Method = {
       backListMeth,
       beforeUploadMeth,
-      handleChangeMeth,
       addTagMeth,
       removeOneTagMeth,
       radioSwitchMeth,
       submitHandle,
+      handleChangeMeth, // 图片上传
     };
 
     const States = {
