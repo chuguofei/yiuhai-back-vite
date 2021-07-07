@@ -5,7 +5,7 @@ import vuex from './vuex';
 import Antd from 'ant-design-vue';
 import 'ant-design-vue/dist/antd.css';
 
-import '@/assets/css/common.scss'
+import '/@/assets/css/common.scss'
 
 
 import VueMarkdownEditor from '@kangc/v-md-editor';

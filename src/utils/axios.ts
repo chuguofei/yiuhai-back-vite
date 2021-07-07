@@ -2,6 +2,7 @@ import axios, { AxiosInstance } from 'axios';
 import { message as Message } from "ant-design-vue";
 import { get } from "lodash-es";
 
+
 export default class MyAxios {
 
     public axios: AxiosInstance;

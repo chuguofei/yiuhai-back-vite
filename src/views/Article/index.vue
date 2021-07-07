@@ -12,8 +12,8 @@ import { SmileOutlined, DownOutlined } from "@ant-design/icons-vue";
 import { defineComponent, toRefs, onMounted, reactive } from "vue";
 import ArticleAddCom from "./ArticleAdd.vue";
 // api
-import Aritcle from "@/api/aritcle.ts";
-import Category from "@/api/category.ts";
+import Aritcle from "/@/api/aritcle.ts";
+import Category from "/@/api/category.ts";
 const columns = [
   {
     title: "Age",
@@ -73,8 +73,11 @@ export default defineComponent({
     };
 
     onMounted(() => {
-      Category.getAllListApi().then((res:any)=>{
-        selectOptionsState.categoryOptions = res.data;
+      // Category.getAllListApi().then((res:any)=>{
+      //   selectOptionsState.categoryOptions = res.data;
+      // })
+      Aritcle.getAritcleListApi().then((result:any)=>{
+        console.log(result)
       })
     });
 

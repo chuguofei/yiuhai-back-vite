@@ -11,10 +11,10 @@ declare namespace CallBack {
     /**
      * 后台返回值
      */
-    export interface Response {
+    export interface Response<T = any> {
         code: number,
         msg: string,
-        data: Object,
+        data: T,
     }
 
     /**

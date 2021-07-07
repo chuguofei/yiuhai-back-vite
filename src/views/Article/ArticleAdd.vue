@@ -7,21 +7,27 @@
   </BaseTitle>
   <div class="article-view-box">
     <a-form ref="formRef" :model="formState" :wrapper-col="{ span: 20 }">
-      <a-form-item label="文章标题">
+      <a-form-item label="文章标题" name="articleTitle">
         <a-input v-model:value="formState.articleTitle" allowClear />
       </a-form-item>
-      <a-form-item label="选择封面图片">
+      <a-form-item label="封面图片" name="articleImg">
         <a-upload
+          class="article-uploader"
           list-type="picture"
           :multiple="false"
           :beforeUpload="beforeUploadMeth"
           :customRequest="handleChangeMeth"
-          v-model:file-list="fileList"
+          :show-upload-list="false"
         >
-          <a-button><upload-outlined></upload-outlined>选择封面图片</a-button>
+         <img class="img" v-if="formState.articleImg" :src="formState.articleImg" alt="avatar" />
+         <div v-else class="upload-box">
+            <loading-outlined v-if="visibleState.uploadLoading"></loading-outlined>
+             <plus-outlined v-else></plus-outlined>
+            <div class="ant-upload-text">上传</div>
+          </div> 
         </a-upload>
       </a-form-item>
-      <a-form-item label="文章说明">
+      <a-form-item label="文章说明" name="articleExplain">
         <a-textarea
           v-model:value="formState.articleExplain"
           placeholder="请输入文章说明"
@@ -29,8 +35,7 @@
           allowClear
         />
       </a-form-item>
-
-      <a-form-item label="文章标签">
+      <a-form-item label="文章标签" name="articleTags">
         <div
           class="chip inline-block article-tag margin-right-5"
           v-for="(item, index) in formState.articleTags"
@@ -52,7 +57,7 @@
         >
       </a-form-item>
       <a-form-item>
-        <div class="radio-group margin-right-10 inline-block">
+        <div class="radio-group margin-right-10 inline-block" name="isTop">
           <span class="margin-right-10">是否<span class="font-red">置顶</span>：</span>
           <a-radio-group v-model:value="formState.isTop">
             <a-radio :value="false">否</a-radio>
@@ -60,7 +65,7 @@
           </a-radio-group>
         </div>
 
-        <div class="radio-group margin-right-10 inline-block">
+        <div class="radio-group margin-right-10 inline-block" name="isPrivate">
           <span class="margin-right-10">是否<span class="font-red">私密</span>：</span>
           <a-radio-group v-model:value="formState.isPrivate">
             <a-radio :value="false">否</a-radio>
@@ -68,7 +73,7 @@
           </a-radio-group>
         </div>
 
-        <div class="radio-group margin-right-10 inline-block">
+        <div class="radio-group margin-right-10 inline-block" name="isExternalLink">
           <span class="margin-right-10">是否<span class="font-red">外链</span>：</span>
           <a-radio-group
             v-model:value="formState.isExternalLink"
@@ -79,7 +84,7 @@
           </a-radio-group>
         </div>
 
-        <div class="radio-group margin-right-10 inline-block">
+        <div class="radio-group margin-right-10 inline-block" name="isRelease">
           <span class="margin-right-10">是否<span class="font-red">发布</span>：</span>
           <a-radio-group v-model:value="formState.isRelease">
             <a-radio :value="false">否</a-radio>
@@ -87,37 +92,38 @@
           </a-radio-group>
         </div>
       </a-form-item>
-      <a-form-item label="外链地址" v-if="formState.isExternalLink == true">
+      <a-form-item label="外链地址" v-if="formState.isExternalLink == true" name="externalLinkUrl">
         <a-input v-model:value="formState.externalLinkUrl" allowClear />
       </a-form-item>
-      <a-form-item label="文章分类">
+      <a-form-item label="文章分类" name="articleCategoryId">
         <a-select v-model:value="formState.articleCategoryId" ref="select" allowClear>
           <a-select-option v-for="item in categoryOptions" :value="item.id">{{
             item.categoryName
           }}</a-select-option>
         </a-select>
       </a-form-item>
-      <a-form-item label="文章MD"></a-form-item>
+      <a-form-item label="文章MD" name="articleContent">
+         <!-- 写md组件 -->
+        <v-md-editor v-model="formState.articleContent" height="500px" ></v-md-editor>
+      </a-form-item>
     </a-form>
-    <!-- 写md组件 -->
-    <v-md-editor v-model="formState.articleContent" height="500px"></v-md-editor>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, reactive, ref, toRefs, onMounted } from "vue";
 import { uuid } from "vue-uuid";
-import BaseTitle from "@/components/BaseTitle.vue";
+import BaseTitle from "/@/components/BaseTitle.vue";
 import { message as Message } from "ant-design-vue";
 
-import { CloseOutlined, UploadOutlined } from "@ant-design/icons-vue";
+import { CloseOutlined, UploadOutlined,PlusOutlined , LoadingOutlined } from "@ant-design/icons-vue";
 
 // api
 import Aritcle from "../../api/aritcle";
-import Category from "@/api/category.ts";
-import Base from "@/api/base.ts";
+import Category from "/@/api/category.ts";
+import Base from "/@/api/base.ts";
 export default defineComponent({
-  components: { BaseTitle, CloseOutlined, UploadOutlined },
+  components: { BaseTitle, CloseOutlined, UploadOutlined,PlusOutlined,LoadingOutlined },
   props: {
     isAdd: Boolean,
   },
@@ -128,6 +134,7 @@ export default defineComponent({
       articleTags: [],
       articleCategoryId: null,
       articleContent: "",
+      // articleImg: "https://gf-oss.oss-cn-beijing.aliyuncs.com/2021-07-06/2fbe77b0-de00-11eb-8f6f-cd7dfc059672.jpeg",
       articleImg: "",
       isTop: false,
       isPrivate: false,
@@ -136,10 +143,14 @@ export default defineComponent({
       isRelease: true,
     });
 
+    const formRef = ref();
+
     let formTagInput = ref<string>("");
 
     // 显示隐藏
-    const visibleState = reactive({});
+    const visibleState = reactive({
+      uploadLoading:false, // 是否在上传中
+    });
 
     /// options
     const selectOptionsState = reactive({
@@ -198,14 +209,12 @@ export default defineComponent({
       if (!isLt2M) {
         Message.error("图片大小不能超过5M!");
       }
-      if (fileList.value.length > 0) {
-        Message.error("只能上传一张封面图!");
-      }
-
-      return isJpgOrPng && isLt2M && fileList.value.length < 1;
+      return isJpgOrPng && isLt2M;
     };
 
+    // 图片上传
     const handleChangeMeth = (file: any) => {
+      visibleState.uploadLoading = true;
       const _uuid = uuid.v1();
       const imgItem = {
         name: _uuid,
@@ -215,7 +224,7 @@ export default defineComponent({
       };
       fileList.value = [imgItem];
       Base.ossUploadApi(file.file,_uuid).then((res: any) => {
-        console.log(res);
+        Message.success("上传成功");
         const imgItem = {
           uid: _uuid,
           name: _uuid,
@@ -223,7 +232,9 @@ export default defineComponent({
           url: res,
           percent: 100,
         };
+        formState.articleImg = res;
         fileList.value = [imgItem];
+        visibleState.uploadLoading = false;
       });
     };
 
@@ -234,11 +245,12 @@ export default defineComponent({
 
     // 提交
     const submitHandle = () => {
-      const articleTags = formState.articleTags.join("|");
+      // 文章标签
+      const _articleTags = formState.articleTags.join("|");
       Aritcle.addOneAritcle({
         articleTitle: formState.articleTitle,
         articleExplain: formState.articleExplain,
-        articleTags,
+        articleTags:_articleTags,
         articleCategoryId: formState.articleCategoryId,
         articleContent: formState.articleContent,
         articleImg: formState.articleImg,
@@ -247,8 +259,12 @@ export default defineComponent({
         isExternalLink: formState.isExternalLink,
         externalLinkUrl: formState.externalLinkUrl,
         isRelease: formState.isRelease,
-      }).then((result) => {});
+      }).then((result) => {
+        Message.success(result.msg);
+        formRef.value.resetFields();
+      });
     };
+
 
     // 导出method
     const Method = {
@@ -267,7 +283,7 @@ export default defineComponent({
       formTagInput,
     };
 
-    return { fileList, ...toRefs(selectOptionsState), ...States, ...Method };
+    return { formRef,fileList, ...toRefs(selectOptionsState), ...States, ...Method };
   },
 });
 </script>
@@ -293,7 +309,35 @@ export default defineComponent({
     padding: 0 15px;
     border-radius: 5px;
   }
+ .article-uploader {
+   .img {
+      width: 128px !important;
+      height: 128px !important;
+   }
+  .ant-upload-select{
+    overflow: hidden;
+    border:1px #999 dashed;
+    width: 128px !important;
+    height: 128px !important;
+    border-radius: 5px;
+    cursor: pointer;
+    &:hover{
+      border-color: #1890ff;
+    }
+
+    .upload-box{
+      height: 100%;
+      display: flex;
+      flex-direction:column;
+      align-items: center;
+      justify-content: center;
+
+      .ant-upload-text{
+        margin-top: 10px;
+      }
+    }
+  }
+ }
+ 
 }
-// LTAI5tECiEF1XwR4g8UMT6Bc
-// 4aMaR08nvFv31h38gyPvp7rsaacnuL
 </style>
