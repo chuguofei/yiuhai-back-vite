@@ -3,7 +3,12 @@
     <div class="margin-tb-10 padding-5">
       <a-button type="primary" @click="isAdd = true">新增文章</a-button>
     </div>
-    <a-table :columns="columns" :data-source="data" :pagination="false"> </a-table>
+    <a-table
+      :columns="tableInfo.tableColumn"
+      :data-source="tableInfo.tableData"
+      :pagination="false"
+    >
+    </a-table>
   </div>
   <ArticleAddCom @CallBack="CallBack" v-else />
 </template>
@@ -11,79 +16,41 @@
 import { SmileOutlined, DownOutlined } from "@ant-design/icons-vue";
 import { defineComponent, toRefs, onMounted, reactive } from "vue";
 import ArticleAddCom from "./ArticleAdd.vue";
+import { dataState, tableColumn } from "./index.data";
 // api
 import Aritcle from "@/api/aritcle.ts";
 import Category from "@/api/category.ts";
-const columns = [
-  {
-    title: "Age",
-    dataIndex: "name",
-    key: "name",
-    slots: { title: "customTitle", customRender: "name" },
-  },
-  {
-    title: "Age",
-    dataIndex: "age",
-    key: "age",
-  },
-  {
-    title: "Address",
-    dataIndex: "address",
-    key: "address",
-  },
-];
-
-const data = [
-  {
-    key: "1",
-    name: "John Brown",
-    age: 32,
-    address: "New York No. 1 Lake Park",
-    tags: ["nice", "developer"],
-  },
-  {
-    key: "2",
-    name: "Jim Green",
-    age: 42,
-    address: "London No. 1 Lake Park",
-    tags: ["loser"],
-  },
-  {
-    key: "3",
-    name: "Joe Black",
-    age: 32,
-    address: "Sidney No. 1 Lake Park",
-    tags: ["cool", "teacher"],
-  },
-];
 
 export default defineComponent({
   setup() {
-    const dataState = reactive({
+    // 表格数据
+    const tableInfo = reactive({
+      tableColumn,
+      tableData: [],
+    });
+
+    const dataState: dataState = reactive({
       isAdd: false,
     });
 
     // select options 数据
     const selectOptionsState = reactive({
-      categoryOptions:[],
+      categoryOptions: [],
     });
 
-    const CallBack = (flag: Boolean) => {
+    const CallBack = (flag: boolean) => {
       dataState.isAdd = flag;
     };
 
     onMounted(() => {
-      Category.getAllListApi().then((res:any)=>{
-        selectOptionsState.categoryOptions = res.data;
-      })
+      Aritcle.getAritcleListApi().then((res: any) => {});
     });
 
     return {
       ...toRefs(dataState),
       ...toRefs(selectOptionsState),
-      data,
-      columns,
       CallBack,
+      tableInfo,
     };
   },
   components: {
