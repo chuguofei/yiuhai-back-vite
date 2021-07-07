@@ -8,6 +8,7 @@
       :data-source="tableInfo.tableData"
       :pagination="false"
     >
+      <template #articleTags="{ text }">{{ text }}</template>
     </a-table>
   </div>
   <ArticleAddCom @CallBack="CallBack" v-else />
@@ -18,8 +19,8 @@ import { defineComponent, toRefs, onMounted, reactive } from "vue";
 import ArticleAddCom from "./ArticleAdd.vue";
 import { dataState, tableColumn } from "./index.data";
 // api
-import Aritcle from "@/api/aritcle.ts";
-import Category from "@/api/category.ts";
+import Aritcle from "/@/api/aritcle.ts";
+import Category from "/@/api/category.ts";
 
 export default defineComponent({
   setup() {
@@ -27,6 +28,7 @@ export default defineComponent({
     const tableInfo = reactive({
       tableColumn,
       tableData: [],
+      queryParams: {},
     });
 
     const dataState: dataState = reactive({
@@ -43,7 +45,9 @@ export default defineComponent({
     };
 
     onMounted(() => {
-      Aritcle.getAritcleListApi().then((res: any) => {});
+      Aritcle.getAritcleListApi().then((result: CallBack.ResponseTable) => {
+        tableInfo.tableData = result.data.records as any;
+      });
     });
 
     return {

@@ -12,6 +12,7 @@ export const tableColumn = [
         title: "文章标签",
         dataIndex: "articleTags",
         key: "articleTags",
+        slots: { customRender: "articleTags" },
     },
     {
         title: "文章分类",
