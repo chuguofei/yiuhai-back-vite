@@ -1,22 +1,23 @@
 <template>
-  <a-menu v-model:selectedKeys="currentMenu" mode="horizontal">
-    <a-menu-item :key="item.router" v-for="item in menuBarArr">
-      <router-link :to="item.router">
-        {{ item.label }}
-      </router-link>
-    </a-menu-item>
-  </a-menu>
-  <div class="padding-5">
-    <!-- <transition name="transitionRouter" mode="out-in">
-      <router-view />
-    </transition> -->
-    <a-config-provider :locale="zh_CN">
-      <router-view v-slot="{ Component }">
-        <transition>
-          <component :is="Component" />
-        </transition>
+  <div>
+    <a-menu v-model:selectedKeys="currentMenu" mode="horizontal">
+      <a-menu-item :key="item.router" v-for="item in menuBarArr">
+        <router-link :to="item.router">
+          {{ item.label }}
+        </router-link>
+      </a-menu-item>
+    </a-menu>
+    <div class="padding-5">
+      <router-view>
       </router-view>
-    </a-config-provider>
+      <!-- <a-config-provider :locale="zh_CN">
+        <router-view v-slot="{ Component }">
+          <transition>
+            <component :is="Component" />
+          </transition>
+        </router-view>
+      </a-config-provider> -->
+    </div>
   </div>
 </template>
 

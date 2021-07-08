@@ -57,7 +57,7 @@
 <script lang="ts">
 import { message as Message } from "ant-design-vue";
 import BaseTitle from "/@/components/BaseTitle.vue";
-import { RequestMethType } from "../struct/common/request-meth-type";
+import { RequestMethType } from "../../struct/common/request-meth-type";
 import { reactive, toRefs, ref, onMounted } from "vue";
 import { cloneDeep } from "lodash-es";
 // api

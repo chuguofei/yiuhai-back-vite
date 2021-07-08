@@ -10,8 +10,8 @@ declare module 'qs' {
 }
 
 declare module 'lodash-es' {
-    const lodashEs: any;
-    export default lodashEs;
+    const lodash_es: any;
+    export default lodash_es;
 }
 
 declare module '*'

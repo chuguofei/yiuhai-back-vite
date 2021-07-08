@@ -8,7 +8,7 @@
   <div class="article-view-box">
     <a-form ref="formRef" :model="formState" :wrapper-col="{ span: 20 }">
       <a-form-item label="文章标题" name="articleTitle">
-        <a-input v-model:value="formState.articleTitle" allowClear />
+        <a-input v-model:value="formState.data.articleTitle" allowClear />
       </a-form-item>
       <a-form-item label="封面图片" name="articleImg">
         <a-upload
@@ -19,17 +19,22 @@
           :customRequest="handleChangeMeth"
           :show-upload-list="false"
         >
-         <img class="img" v-if="formState.articleImg" :src="formState.articleImg" alt="avatar" />
-         <div v-else class="upload-box">
+          <img
+            class="img"
+            v-if="formState.data.articleImg"
+            :src="formState.data.articleImg"
+            alt="avatar"
+          />
+          <div v-else class="upload-box">
             <loading-outlined v-if="visibleState.uploadLoading"></loading-outlined>
-             <plus-outlined v-else></plus-outlined>
+            <plus-outlined v-else></plus-outlined>
             <div class="ant-upload-text">上传</div>
-          </div> 
+          </div>
         </a-upload>
       </a-form-item>
       <a-form-item label="文章说明" name="articleExplain">
         <a-textarea
-          v-model:value="formState.articleExplain"
+          v-model:value="formState.data.articleExplain"
           placeholder="请输入文章说明"
           :auto-size="{ minRows: 2, maxRows: 5 }"
           allowClear
@@ -38,7 +43,7 @@
       <a-form-item label="文章标签" name="articleTags">
         <div
           class="chip inline-block article-tag margin-right-5"
-          v-for="(item, index) in formState.articleTags"
+          v-for="(item, index) in formState.data.articleTags"
           :key="index"
         >
           <span>{{ item }}</span>
@@ -53,13 +58,13 @@
         </div>
         <a-input v-model:value="formTagInput" />
         <a-button class="margin-right-10" type="dashed" @click="addTagMeth()"
-          >添加标签</a-button
-        >
+          >添加标签
+        </a-button>
       </a-form-item>
       <a-form-item>
         <div class="radio-group margin-right-10 inline-block" name="isTop">
           <span class="margin-right-10">是否<span class="font-red">置顶</span>：</span>
-          <a-radio-group v-model:value="formState.isTop">
+          <a-radio-group v-model:value="formState.data.isTop">
             <a-radio :value="false">否</a-radio>
             <a-radio :value="true">是</a-radio>
           </a-radio-group>
@@ -67,7 +72,7 @@
 
         <div class="radio-group margin-right-10 inline-block" name="isPrivate">
           <span class="margin-right-10">是否<span class="font-red">私密</span>：</span>
-          <a-radio-group v-model:value="formState.isPrivate">
+          <a-radio-group v-model:value="formState.data.isPrivate">
             <a-radio :value="false">否</a-radio>
             <a-radio :value="true">是</a-radio>
           </a-radio-group>
@@ -76,7 +81,7 @@
         <div class="radio-group margin-right-10 inline-block" name="isExternalLink">
           <span class="margin-right-10">是否<span class="font-red">外链</span>：</span>
           <a-radio-group
-            v-model:value="formState.isExternalLink"
+            v-model:value="formState.data.isExternalLink"
             @change="radioSwitchMeth('isExternalLink')"
           >
             <a-radio :value="false">否</a-radio>
@@ -86,25 +91,37 @@
 
         <div class="radio-group margin-right-10 inline-block" name="isRelease">
           <span class="margin-right-10">是否<span class="font-red">发布</span>：</span>
-          <a-radio-group v-model:value="formState.isRelease">
+          <a-radio-group v-model:value="formState.data.isRelease">
             <a-radio :value="false">否</a-radio>
             <a-radio :value="true">是</a-radio>
           </a-radio-group>
         </div>
       </a-form-item>
-      <a-form-item label="外链地址" v-if="formState.isExternalLink == true" name="externalLinkUrl">
-        <a-input v-model:value="formState.externalLinkUrl" allowClear />
+      <a-form-item
+        label="外链地址"
+        v-if="formState.data.isExternalLink == true"
+        name="externalLinkUrl"
+      >
+        <a-input v-model:value="formState.data.externalLinkUrl" allowClear />
       </a-form-item>
       <a-form-item label="文章分类" name="articleCategoryId">
-        <a-select v-model:value="formState.articleCategoryId" ref="select" allowClear>
-          <a-select-option v-for="item in categoryOptions" :value="item.id">{{
-            item.categoryName
-          }}</a-select-option>
+        <a-select
+          v-model:value="formState.data.articleCategoryId"
+          ref="select"
+          allowClear
+        >
+          <a-select-option v-for="item in categoryOptions" :value="item.id"
+            >{{ item.categoryName }}
+          </a-select-option>
         </a-select>
       </a-form-item>
       <a-form-item label="文章MD" name="articleContent">
-         <!-- 写md组件 -->
-        <v-md-editor v-model="formState.articleContent" height="500px" ></v-md-editor>
+        <!-- 写md组件 -->
+        <v-md-editor
+          @change="editorChangeMeth"
+          v-model="formState.data.articleContent"
+          height="500px"
+        ></v-md-editor>
       </a-form-item>
     </a-form>
   </div>
@@ -113,43 +130,50 @@
 <script lang="ts">
 import { defineComponent, reactive, ref, toRefs, onMounted } from "vue";
 import { uuid } from "vue-uuid";
+import { cloneDeep } from "lodash-es";
 import BaseTitle from "/@/components/BaseTitle.vue";
 import { message as Message } from "ant-design-vue";
-
-import { CloseOutlined, UploadOutlined,PlusOutlined , LoadingOutlined } from "@ant-design/icons-vue";
-
+import {
+  CloseOutlined,
+  UploadOutlined,
+  PlusOutlined,
+  LoadingOutlined,
+} from "@ant-design/icons-vue";
 // api
-import Aritcle from "../../api/aritcle";
+import Aritcle from "/@/api/aritcle";
 import Category from "/@/api/category.ts";
 import Base from "/@/api/base.ts";
+
 export default defineComponent({
-  components: { BaseTitle, CloseOutlined, UploadOutlined,PlusOutlined,LoadingOutlined },
+  components: { BaseTitle, CloseOutlined, UploadOutlined, PlusOutlined, LoadingOutlined },
   props: {
     isAdd: Boolean,
   },
-  setup(props, ctx) {
+  emits: ["CallBack"],
+  setup(props, { emit }) {
     const formState = reactive({
-      articleTitle: "",
-      articleExplain: "",
-      articleTags: [],
-      articleCategoryId: null,
-      articleContent: "",
-      // articleImg: "https://gf-oss.oss-cn-beijing.aliyuncs.com/2021-07-06/2fbe77b0-de00-11eb-8f6f-cd7dfc059672.jpeg",
-      articleImg: "",
-      isTop: false,
-      isPrivate: false,
-      isExternalLink: false,
-      externalLinkUrl: "",
-      isRelease: true,
+      data: {
+        id: null,
+        articleTitle: "",
+        articleExplain: "",
+        articleTags: [],
+        articleCategoryId: null,
+        articleContent: "",
+        // articleImg: "https://gf-oss.oss-cn-beijing.aliyuncs.com/2021-07-06/2fbe77b0-de00-11eb-8f6f-cd7dfc059672.jpeg",
+        articleImg: "",
+        isTop: false,
+        isPrivate: false,
+        isExternalLink: false,
+        externalLinkUrl: "",
+        isRelease: true,
+      },
     });
 
-    const formRef = ref();
-
-    let formTagInput = ref<string>("");
+    const formTagInput = ref<string>("");
 
     // 显示隐藏
     const visibleState = reactive({
-      uploadLoading:false, // 是否在上传中
+      uploadLoading: false, // 是否在上传中
     });
 
     /// options
@@ -170,30 +194,36 @@ export default defineComponent({
       });
     };
 
+    const formParentMeth = (rowItem: any) => {
+      const row = cloneDeep(rowItem);
+      formState.data = row;
+      formState.data.articleTags = row.articleTags.split("|");
+    };
+
     // 添加标签
     const addTagMeth = () => {
       if (formTagInput.value.length == 0) {
         Message.error("请输入标签");
         return;
       }
-      if (formState.articleTags.includes(formTagInput.value)) {
+      if (formState.data.articleTags.includes(formTagInput.value)) {
         Message.error("该标签已存在");
         return;
       }
-      formState.articleTags.push(formTagInput.value);
+      formState.data.articleTags.push(formTagInput.value);
       formTagInput.value = "";
     };
 
     // 删除标签
     const removeOneTagMeth = (index: number) => {
-      formState.articleTags.splice(index, 1);
+      formState.data.articleTags.splice(index, 1);
     };
 
     // 单选按钮切换
     const radioSwitchMeth = (name: string) => {
       if (name == "isExternalLink") {
-        if (formState.isExternalLink == true) {
-          formState.externalLinkUrl = ""; // 清空外链链接
+        if (formState.data.isExternalLink == true) {
+          formState.data.externalLinkUrl = ""; // 清空外链链接
         }
       }
     };
@@ -223,7 +253,7 @@ export default defineComponent({
         percent: 99,
       };
       fileList.value = [imgItem];
-      Base.ossUploadApi(file.file,_uuid).then((res: any) => {
+      Base.ossUploadApi(file.file, _uuid).then((res: any) => {
         Message.success("上传成功");
         const imgItem = {
           uid: _uuid,
@@ -232,7 +262,7 @@ export default defineComponent({
           url: res,
           percent: 100,
         };
-        formState.articleImg = res;
+        formState.data.articleImg = res;
         fileList.value = [imgItem];
         visibleState.uploadLoading = false;
       });
@@ -240,31 +270,48 @@ export default defineComponent({
 
     // 返回列表
     const backListMeth = () => {
-      ctx.emit("CallBack", false);
+      emit("CallBack", false);
     };
 
     // 提交
+    const formRef = ref();
     const submitHandle = () => {
       // 文章标签
-      const _articleTags = formState.articleTags.join("|");
-      Aritcle.addOneAritcle({
-        articleTitle: formState.articleTitle,
-        articleExplain: formState.articleExplain,
-        articleTags:_articleTags,
-        articleCategoryId: formState.articleCategoryId,
-        articleContent: formState.articleContent,
-        articleImg: formState.articleImg,
-        isTop: formState.isTop,
-        isPrivate: formState.isPrivate,
-        isExternalLink: formState.isExternalLink,
-        externalLinkUrl: formState.externalLinkUrl,
-        isRelease: formState.isRelease,
-      }).then((result) => {
-        Message.success(result.msg);
-        formRef.value.resetFields();
-      });
+      const _articleTags = formState.data.articleTags.join("|");
+      const submitForm = {
+        id: formState.data.id,
+        articleTitle: formState.data.articleTitle,
+        articleExplain: formState.data.articleExplain,
+        articleTags: _articleTags,
+        articleCategoryId: formState.data.articleCategoryId,
+        articleContent: formState.data.articleContent,
+        articleImg: formState.data.articleImg,
+        isTop: formState.data.isTop,
+        isPrivate: formState.data.isPrivate,
+        isExternalLink: formState.data.isExternalLink,
+        externalLinkUrl: formState.data.externalLinkUrl,
+        isRelease: formState.data.isRelease,
+      };
+      if (!!!formState.data.id) {
+        // 添加
+        Aritcle.addOneAritcleApi(submitForm).then((result: CallBack.Response) => {
+          Message.success(result.msg);
+          formRef.value.resetFields();
+          backListMeth();
+        });
+      } else {
+        // 修改
+        Aritcle.editOneAritcleApi(submitForm).then((result: CallBack.Response) => {
+          Message.success(result.msg);
+          formRef.value.resetFields();
+          backListMeth();
+        });
+      }
     };
 
+    const editorChangeMeth = (text: any, html: any) => {
+      console.log(text, html);
+    };
 
     // 导出method
     const Method = {
@@ -275,6 +322,8 @@ export default defineComponent({
       radioSwitchMeth,
       submitHandle,
       handleChangeMeth, // 图片上传
+      formParentMeth,
+      editorChangeMeth, // 编辑器更改
     };
 
     const States = {
@@ -283,7 +332,7 @@ export default defineComponent({
       formTagInput,
     };
 
-    return { formRef,fileList, ...toRefs(selectOptionsState), ...States, ...Method };
+    return { formRef, fileList, ...toRefs(selectOptionsState), ...States, ...Method };
   },
 });
 </script>
@@ -299,6 +348,7 @@ export default defineComponent({
     height: 30px;
     line-height: 30px;
     border-radius: 5px;
+
     span {
       margin-right: 5px;
     }
@@ -309,35 +359,37 @@ export default defineComponent({
     padding: 0 15px;
     border-radius: 5px;
   }
- .article-uploader {
-   .img {
+
+  .article-uploader {
+    .img {
       width: 128px !important;
       height: 128px !important;
-   }
-  .ant-upload-select{
-    overflow: hidden;
-    border:1px #999 dashed;
-    width: 128px !important;
-    height: 128px !important;
-    border-radius: 5px;
-    cursor: pointer;
-    &:hover{
-      border-color: #1890ff;
     }
 
-    .upload-box{
-      height: 100%;
-      display: flex;
-      flex-direction:column;
-      align-items: center;
-      justify-content: center;
+    .ant-upload-select {
+      overflow: hidden;
+      border: 1px #999 dashed;
+      width: 128px !important;
+      height: 128px !important;
+      border-radius: 5px;
+      cursor: pointer;
 
-      .ant-upload-text{
-        margin-top: 10px;
+      &:hover {
+        border-color: #1890ff;
+      }
+
+      .upload-box {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+
+        .ant-upload-text {
+          margin-top: 10px;
+        }
       }
     }
   }
- }
- 
 }
 </style>

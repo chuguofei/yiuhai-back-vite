@@ -1,0 +1,12 @@
+// 警告
+.btn-warning {
+    background-color: #e6a23c;
+    border-color: #e6a23c;
+    color: #fff;
+    &:hover,
+    &:focus {
+        color: #fff;
+        background-color: #e2be88;
+        border-color: #e2be88;
+    }
+}
