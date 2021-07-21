@@ -10,7 +10,7 @@ class Category {
      * @returns 
      */
     public addOneOrEditCategoryApi(type: RequestMethType, data: Category.CategoryStruct) {
-        let url = type == RequestMethType.Add ? `/api/blogArticleCategory/addOneCategory` : `/api/blogArticleCategory/editOneCategory`;
+        let url = type == RequestMethType.Add ? `/blogapi/blogArticleCategory/addOneCategory` : `/blogapi/blogArticleCategory/editOneCategory`;
         return request.axios({
             url,
             method: "post",
@@ -25,7 +25,7 @@ class Category {
      */
     public getCategoryListApi(data: Category.CategoryStruct) {
         return request.axios({
-            url: "/api/blogArticleCategory/getCategoryList?" + qs.stringify(data),
+            url: "/blogapi/blogArticleCategory/getCategoryList?" + qs.stringify(data),
             method: "get",
         });
     }
@@ -37,7 +37,7 @@ class Category {
      */
     public getAllListApi(data: Category.CategoryStruct) {
         return request.axios({
-            url: "/api/blogArticleCategory/allList?" + qs.stringify(data),
+            url: "/blogapi/blogArticleCategory/allList?" + qs.stringify(data),
             method: "get",
         });
     }
@@ -49,7 +49,7 @@ class Category {
      */
     public delOneCategoryApi(id: number) {
         return request.axios({
-            url: `/api/blogArticleCategory/delOneCategory/${id}`,
+            url: `/blogapi/blogArticleCategory/delOneCategory/${id}`,
             method: "delete",
         })
     }

@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import { resolve } from 'path'
+// 按需引入
 import styleImport from 'vite-plugin-style-import'
 
 
@@ -20,9 +21,9 @@ export default defineConfig({
   },
   resolve: {
     alias: [
-       {
-          find: /\/@\//,
-          replacement: pathResolve('src') + '/',
+      {
+        find: /\/@\//,
+        replacement: pathResolve('src') + '/',
       }
       // '@': resolve(__dirname, './src')
     ],
@@ -39,16 +40,23 @@ export default defineConfig({
             return `ant-design-vue/es/${name}/style/index`
           },
         },
+        {
+          libraryName: 'vxe-table',
+          esModule: true,
+          resolveComponent: (name) => `vxe-table/es/${name}`,
+          resolveStyle: (name) => `vxe-table/es/${name}/style.css`
+        }
       ]
     })
   ],
   server: {
     proxy: {
-      '/api': {
-        target: 'http://127.0.0.1:6666/',
+      '/blogapi/': {
+        // target: 'http://127.0.0.1:7779/',
+        target: 'http://121.89.241.42:7779/',
         changeOrigin: true,
         secure: false, // 如果是https接口，需要配置这个参数
-        rewrite: (path) => path.replace(/^\/api/, '')
+        rewrite: (path) => path.replace(/^\/blogapi/, '')
       }
     }
   }

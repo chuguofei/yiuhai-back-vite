@@ -7,6 +7,7 @@ const route = [
   { path: '/category', component: () => import('/@/views/blog/Category.vue') },
   { path: '/tags', component: () => import('/@/views/blog/Tags.vue') },
   { path: '/firend', component: () => import('/@/views/blog/Firend.vue') },
+  { path: '/quickNav', component: () => import('/@/views/blog/QuickNav/index.vue') },
 ]
 
 

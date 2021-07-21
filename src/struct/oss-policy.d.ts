@@ -8,7 +8,7 @@ declare namespace BaseStruct {
         signature?: string,
         dir?: string,
         host?: string,
-        key?:string,
+        key?: string,
         expire?: number,
         file?: File
     }

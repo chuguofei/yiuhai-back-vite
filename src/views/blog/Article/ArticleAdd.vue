@@ -110,7 +110,7 @@
           ref="select"
           allowClear
         >
-          <a-select-option v-for="item in categoryOptions" :value="item.id"
+          <a-select-option v-for="item in categoryOptions" :key="item.id" :value="item.id"
             >{{ item.categoryName }}
           </a-select-option>
         </a-select>
@@ -120,6 +120,8 @@
         <v-md-editor
           @change="editorChangeMeth"
           v-model="formState.data.articleContent"
+          :disabled-menus="[]"
+          @upload-image="mkdownImgUploadMeth"
           height="500px"
         ></v-md-editor>
       </a-form-item>
@@ -142,7 +144,7 @@ import {
 // api
 import Aritcle from "/@/api/aritcle";
 import Category from "/@/api/category.ts";
-import Base from "/@/api/base.ts";
+import Base from "../../../api/base.ts";
 
 export default defineComponent({
   components: { BaseTitle, CloseOutlined, UploadOutlined, PlusOutlined, LoadingOutlined },
@@ -242,7 +244,7 @@ export default defineComponent({
       return isJpgOrPng && isLt2M;
     };
 
-    // 图片上传
+    // 文章封面图片上传
     const handleChangeMeth = (file: any) => {
       visibleState.uploadLoading = true;
       const _uuid = uuid.v1();
@@ -268,6 +270,16 @@ export default defineComponent({
       });
     };
 
+    const mkdownImgUploadMeth = (event: any, insertImage: any, file: File) => {
+      Base.ImageCompressor(file, true).then((img_url: String) => {
+        console.log(img_url);
+        insertImage({
+          url: img_url,
+          desc: "输入一段描述",
+        });
+      });
+    };
+
     // 返回列表
     const backListMeth = () => {
       emit("CallBack", false);
@@ -277,7 +289,7 @@ export default defineComponent({
     const formRef = ref();
     const submitHandle = () => {
       // 文章标签
-      const _articleTags = formState.data.articleTags.join("|");
+      const _articleTags = formState.data.articleTags.join(",");
       const submitForm = {
         id: formState.data.id,
         articleTitle: formState.data.articleTitle,
@@ -322,6 +334,7 @@ export default defineComponent({
       radioSwitchMeth,
       submitHandle,
       handleChangeMeth, // 图片上传
+      mkdownImgUploadMeth, // makedown 上传图片
       formParentMeth,
       editorChangeMeth, // 编辑器更改
     };

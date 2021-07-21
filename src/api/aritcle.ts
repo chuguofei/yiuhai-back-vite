@@ -9,7 +9,7 @@ class Aritcle {
      */
     public addOneAritcleApi(data: Aritcle.AritcleStruct): Promise<CallBack.Response> {
         return request.axios({
-            url: "/api/blogArticle/addArticleOne",
+            url: "/blogapi/blogArticle/addArticleOne",
             method: "post",
             data
         });
@@ -22,7 +22,7 @@ class Aritcle {
      */
     public editOneAritcleApi(data: Aritcle.AritcleStruct): Promise<CallBack.Response> {
         return request.axios({
-            url: "/api/blogArticle/editArticleOne",
+            url: "/blogapi/blogArticle/editArticleOne",
             method: "put",
             data
         });
@@ -35,7 +35,7 @@ class Aritcle {
     */
     public delOneAritcleApi(id?: Number): Promise<CallBack.Response> {
         return request.axios({
-            url: `/api/blogArticle/delArticleOne/${id}`,
+            url: `/blogapi/blogArticle/delArticleOne/${id}`,
             method: "delete",
         });
     }
@@ -47,7 +47,7 @@ class Aritcle {
      */
     public getAritcleListApi(data?: Aritcle.AritcleStruct): Promise<CallBack.ResponseTable> {
         return request.axios({
-            url: "/api/blogArticle/getArticleList?" + qs.stringify(data),
+            url: "/blogapi/blogArticle/getArticleList?" + qs.stringify(data),
             method: "get"
         })
     }

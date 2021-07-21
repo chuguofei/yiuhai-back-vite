@@ -4,28 +4,25 @@ import router from './router';
 import vuex from './vuex';
 import Antd from 'ant-design-vue';
 import 'ant-design-vue/dist/antd.css';
-
 import '/@/assets/css/index.scss'
 
 
-import VueMarkdownEditor from '@kangc/v-md-editor';
-import '@kangc/v-md-editor/lib/style/base-editor.css';
 
-import githubTheme from '@kangc/v-md-editor/lib/theme/github.js';
-import '@kangc/v-md-editor/lib/theme/style/github.css';
-import hljs from 'highlight.js';
+import { useTable } from './plugins/vxe-table'
+import { useMakedown } from './plugins/markdown'
 
-
-VueMarkdownEditor.use(githubTheme, {
-    Hljs: hljs,
-});
+import 'xe-utils'
+import VXETable from 'vxe-table'
+import 'vxe-table/lib/style.css'
 
 
 const app = createApp(App);
 app.use(router);
 app.use(vuex);
 app.use(Antd);
-app.use(VueMarkdownEditor);
+app.use(useMakedown);
+app.use(VXETable);
+// app.use(useTable);
 router.isReady().then(() => {
     app.mount('#app');
 })
