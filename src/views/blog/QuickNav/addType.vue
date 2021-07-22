@@ -70,7 +70,7 @@
 
 <script lang="ts">
 import { reactive, toRefs, ref, onMounted } from "vue";
-import QuickNav from "../../../api/quicknav";
+import QuickNavType from "../../../api/quicknav-type";
 import { VxeFormEvents, VxeTableInstance } from "vxe-table";
 import { message as Message } from "ant-design-vue";
 export default {
@@ -105,7 +105,7 @@ export default {
     };
 
     const submitHandleMeth: VxeFormEvents.Submit = () => {
-      QuickNav.addQuickTypeOneApi(modalInfo.submitForm).then((res) => {
+      QuickNavType.addQuickTypeOneApi(modalInfo.submitForm).then((res) => {
         modalInfo.submitForm.name = "";
         Message.success("添加成功");
         getTableListMeth();
@@ -114,7 +114,7 @@ export default {
 
     const getTableListMeth = () => {
       tableInfo.loading = true;
-      QuickNav.list().then((res: CallBack.Response) => {
+      QuickNavType.list().then((res: CallBack.Response) => {
         tableInfo.dataSource = res.data;
         tableInfo.loading = false;
       });
@@ -124,7 +124,7 @@ export default {
     const btnHandleMeth = (type: string, item: any) => {
       const $table = xTable.value;
       if (type == "del") {
-        QuickNav.delQuickTypeOne(item.id).then((res: CallBack.Response) => {
+        QuickNavType.delQuickTypeOne(item.id).then((res: CallBack.Response) => {
           Message.success("删除成功");
           getTableListMeth();
         });
@@ -136,7 +136,7 @@ export default {
       } else if (type == "edit-save") {
         // 修改-保存按钮
         $table.clearActived().then(() => {
-          QuickNav.updateTypeOne(item).then((res: CallBack.Response) => {
+          QuickNavType.updateTypeOne(item).then((res: CallBack.Response) => {
             Message.success("修改成功");
             getTableListMeth();
           });

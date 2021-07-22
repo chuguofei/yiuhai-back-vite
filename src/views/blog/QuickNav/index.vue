@@ -35,7 +35,8 @@
 import BaseTitle from "/@/components/BaseTitle.vue";
 import addTypeComp from "./addType.vue";
 import addQuickNavComp from "./addQuickNav.vue";
-import { reactive, defineComponent } from "vue";
+import { reactive, defineComponent , onMounted } from "vue";
+import QuickNav from "../../../api/quicknav";
 export default defineComponent({
   components: { BaseTitle, addTypeComp, addQuickNavComp },
   setup(props) {
@@ -44,12 +45,24 @@ export default defineComponent({
       isQuickNavAdd: false, // 添加导航
     });
 
+    onMounted(()=>{
+      getListMeth();
+    });
+
+    // 弹框关闭
     const callBackTypeModal = (type: string) => {
       if ("add-type" == type) {
         visibleMeth.isQuickTypeAdd = false;
       } else if ("add-nav" == type) {
         visibleMeth.isQuickNavAdd = false;
       }
+    };
+
+    // 获取数据列表
+    const getListMeth = () => {
+      QuickNav.selectList().then((res) => {
+        console.log(res);
+      });
     };
 
     const btnHandleMeth = (type: string) => {
@@ -65,11 +78,13 @@ export default defineComponent({
       console.log(123);
     };
 
+
     return {
       visibleMeth,
       btnHandleMeth,
       submitHandleMeth,
       callBackTypeModal,
+      getListMeth
     };
   },
 });

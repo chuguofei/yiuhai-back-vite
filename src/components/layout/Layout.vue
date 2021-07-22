@@ -35,12 +35,12 @@ export default defineComponent({
     const currentPath = proxy.$router.currentRoute.value.path;
     const state = reactive({
       menuBarArr: [
-        { label: "首页", router: "/" },
-        { label: "文章管理", router: "/article" },
-        { label: "分类管理", router: "/category" },
-        { label: "标签管理", router: "/tags" },
-        { label: "友链", router: "/firend" },
-        { label: "快捷导航", router: "/quickNav" },
+        { label: "首页", router: "/blog/home" },
+        { label: "文章管理", router: "/blog/article" },
+        { label: "分类管理", router: "/blog/category" },
+        { label: "标签管理", router: "/blog/tags" },
+        { label: "友链", router: "/blog/firend" },
+        { label: "快捷导航", router: "/blog/quickNav" },
       ],
     });
     const currentMenu = ref<string[]>([currentPath]); // 当前选中的菜单
