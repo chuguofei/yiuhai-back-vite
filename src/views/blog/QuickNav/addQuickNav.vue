@@ -1,42 +1,33 @@
 <template>
   <vxe-modal v-model="open" width="1000" :before-hide-method="cancelMeth">
-    <vxe-form
-      ref="xForm"
-      :data="submitForm"
-      :rules="rules"
-      title-width="100"
-      title-align="right"
-    >
-      <vxe-form-item title="导航名称" field="name" :item-render="{}" span="12">
+    <vxe-form ref="xForm" :data="submitForm" title-width="100" title-align="right">
+      <vxe-form-item title="导航名称" :item-render="{}" span="12">
         <template #default="{ data }">
-          <vxe-input
-            v-model="data.name"
-            placeholder="导航名称"
-            clearable
-          ></vxe-input>
+          <vxe-input v-model="data.name" placeholder="导航名称" clearable></vxe-input>
         </template>
       </vxe-form-item>
-      <vxe-form-item title="导航类型" field="icon" :item-render="{}" span="12">
+
+      <vxe-form-item title="导航链接" :item-render="{}" span="12">
         <template #default="{ data }">
-          <vxe-input
-            v-model="data.icon"
-            placeholder="导航类型"
-            clearable
-          ></vxe-input>
+          <vxe-input v-model="data.href" placeholder="导航链接" clearable></vxe-input>
         </template>
       </vxe-form-item>
-      <vxe-form-item title="导航链接" field="href" :item-render="{}" span="12">
+      <vxe-form-item title="icon" :item-render="{}" span="12">
         <template #default="{ data }">
-          <vxe-input
-            v-model="data.href"
-            placeholder="导航链接"
-            clearable
-          ></vxe-input>
+          <vxe-input v-model="data.icon" placeholder="导航链接" clearable></vxe-input>
         </template>
       </vxe-form-item>
-      <vxe-form-item title="名称" field="type" :item-render="{}" span="12">
+
+      <vxe-form-item title="导航类型" :item-render="{}" span="12">
         <template #default="{ data }">
-          <vxe-select v-model="data.typeId"> </vxe-select>
+          <vxe-select v-model="data.typeId" placeholder="默认尺寸">
+            <vxe-option
+              v-for="item in navTypeOptions"
+              :key="item.id"
+              :value="item.id"
+              :label="item.name"
+            ></vxe-option>
+          </vxe-select>
         </template>
       </vxe-form-item>
     </vxe-form>
@@ -46,9 +37,9 @@
   </vxe-modal>
 </template>
 
-
 <script lang="ts">
-import { defineComponent, reactive, toRefs } from "vue";
+import { defineComponent, reactive, toRefs, ref, onMounted } from "vue";
+import QuickNavType from "../../../api/quicknav-type";
 
 export default {
   name: "addQuickNavComp",
@@ -65,6 +56,14 @@ export default {
       emit("update:open", false);
     };
 
+    const options = reactive({
+      navTypeOptions: [],
+    });
+
+    onMounted(() => {
+      getNavTypeOptions();
+    });
+
     const modalInfo = reactive({
       submitForm: {
         name: "",
@@ -74,9 +73,19 @@ export default {
       },
     });
 
+    const getNavTypeOptions = () => {
+      QuickNavType.list().then((res: CallBack.Response) => {
+        options.navTypeOptions = res.data;
+      });
+    };
+
+    // 提交
+    const submitHandleMeth = () => {};
+
     return {
       cancelMeth,
       ...toRefs(modalInfo),
+      ...toRefs(options),
     };
   },
 };

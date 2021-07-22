@@ -16,6 +16,21 @@
       </template>
     </BaseTitle>
 
+    <!-- <vxe-table
+      ref="xTable"
+      :data="dataSource"
+      keep-source
+      class="margin-top-10"
+      :loading="loading"
+      :edit-config="{ trigger: 'manual', mode: 'row' }"
+    >
+      <vxe-column field="id" title="id"></vxe-column>
+      <vxe-column field="name" title="名称"></vxe-column>
+      <vxe-column field="icon" title="图标"></vxe-column>
+      <vxe-column field="href" title="链接"></vxe-column>
+      <vxe-column field="navTypeName" title="类型"></vxe-column>
+    </vxe-table> -->
+
     <!-- 添加导航类型 -->
     <add-type-comp
       v-if="visibleMeth.isQuickTypeAdd"
@@ -24,19 +39,17 @@
     ></add-type-comp>
 
     <!-- 添加导航 -->
-    <add-quick-nav-comp
-      v-model:open="visibleMeth.isQuickNavAdd"
-    ></add-quick-nav-comp>
+    <add-quick-nav-comp v-model:open="visibleMeth.isQuickNavAdd"></add-quick-nav-comp>
   </div>
 </template>
-
 
 <script lang="ts">
 import BaseTitle from "/@/components/BaseTitle.vue";
 import addTypeComp from "./addType.vue";
 import addQuickNavComp from "./addQuickNav.vue";
-import { reactive, defineComponent , onMounted } from "vue";
+import { reactive, defineComponent, onMounted } from "vue";
 import QuickNav from "../../../api/quicknav";
+import { tableInfoStruct } from "./struct/index";
 export default defineComponent({
   components: { BaseTitle, addTypeComp, addQuickNavComp },
   setup(props) {
@@ -45,7 +58,17 @@ export default defineComponent({
       isQuickNavAdd: false, // 添加导航
     });
 
-    onMounted(()=>{
+    const tableInfo = reactive({
+      loading: false,
+      dataSource: [],
+      queryParams: {
+        total: 0,
+        size: 10,
+        current: 0,
+      },
+    });
+
+    onMounted(() => {
       getListMeth();
     });
 
@@ -61,7 +84,8 @@ export default defineComponent({
     // 获取数据列表
     const getListMeth = () => {
       QuickNav.selectList().then((res) => {
-        console.log(res);
+        tableInfo.queryParams.total = res.data.total;
+        tableInfo.dataSource = res.data.records;
       });
     };
 
@@ -78,13 +102,12 @@ export default defineComponent({
       console.log(123);
     };
 
-
     return {
       visibleMeth,
       btnHandleMeth,
       submitHandleMeth,
       callBackTypeModal,
-      getListMeth
+      getListMeth,
     };
   },
 });

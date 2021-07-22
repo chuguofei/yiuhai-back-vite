@@ -53,7 +53,7 @@ export default defineConfig({
     proxy: {
       '/blogapi/': {
         // target: 'http://127.0.0.1:7779/',
-        target: 'http://121.89.241.42:7779/',
+        target: 'http://127.0.0.1:7779/',
         changeOrigin: true,
         secure: false, // 如果是https接口，需要配置这个参数
         rewrite: (path) => path.replace(/^\/blogapi/, '')
