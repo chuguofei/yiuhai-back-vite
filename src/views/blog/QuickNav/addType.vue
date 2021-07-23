@@ -118,7 +118,7 @@ export default {
         tableInfo.dataSource = res.data;
         tableInfo.loading = false;
       });
-    };
+    }; 
 
     // 按钮统一入口
     const btnHandleMeth = (type: string, item: any) => {

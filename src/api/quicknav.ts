@@ -1,7 +1,7 @@
 import request from '.';
 import qs from 'qs';
 
-class QuickNav {
+class QuickNavController {
 
     /**
      * @description 导航立列表
@@ -47,7 +47,7 @@ class QuickNav {
      * @param data 
      * @returns 
      */
-    public delQuickNavOne(id?: Number): Promise<CallBack.ResponseTable> {
+    public delQuickNavOne(id?: string): Promise<CallBack.ResponseTable> {
         return request.axios({
             url: `/blogapi/quickNav/removeQuickNavOne/${id}`,
             method: "delete",
@@ -55,4 +55,4 @@ class QuickNav {
     }
 }
 
-export default new QuickNav();
+export default new QuickNavController();

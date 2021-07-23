@@ -8,11 +8,11 @@ declare namespace QuickNav {
     }
 
     interface QuickNav extends Base.Page {
-        id?: number | string,
+        id?: number | string | null,
         name?: string,
         icon?: string,
         href?: string,
-        typeId?: number,
+        typeId?: number | null,
         navTypeId?: number,
         navTypeName?: string
     }

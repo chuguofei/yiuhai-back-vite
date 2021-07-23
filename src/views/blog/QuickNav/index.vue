@@ -1,55 +1,100 @@
 <template>
-  <div>
-    <BaseTitle title="快捷导航">
-      <template v-slot:btn-group>
-        <a-button
-          type="primary"
-          class="margin-right-10"
-          @click="btnHandleMeth('add-quick-type')"
-          v-text="'添加导航类型'"
-        />
-        <a-button
-          type="primary"
-          @click="btnHandleMeth('add-quick-nav')"
-          v-text="'添加导航链接'"
+  <BaseTitle title="快捷导航">
+    <template v-slot:btn-group>
+      <a-button
+        type="primary"
+        class="margin-right-10"
+        @click="btnHandleMeth('add-quick-type')"
+        v-text="'添加导航类型'"
+      />
+      <a-button
+        type="primary"
+        @click="btnHandleMeth('add-quick-nav')"
+        v-text="'添加导航链接'"
+      />
+    </template>
+  </BaseTitle>
+
+  <!-- table表格 -->
+  <vxe-table
+    ref="xTable"
+    :data="dataSource"
+    keep-source
+    class="margin-top-10"
+    :loading="loading"
+    :edit-config="{ trigger: 'manual', mode: 'row' }"
+  >
+    <vxe-column field="id" title="id"></vxe-column>
+    <vxe-column field="name" title="名称"></vxe-column>
+    <vxe-column field="icon" title="图标"></vxe-column>
+    <vxe-column field="href" title="链接"></vxe-column>
+    <vxe-column field="navTypeName" title="类型"></vxe-column>
+    <vxe-column title="操作">
+      <template #default="{ row }">
+        <a-popconfirm
+          title="确定要删除该标签？"
+          ok-text="确定"
+          cancel-text="取消"
+          @confirm="btnHandleMeth('del', row)"
+        >
+          <vxe-button status="danger" v-text="'删除'" />
+        </a-popconfirm>
+        <vxe-button
+          status="warning"
+          v-text="'修改'"
+          @click="btnHandleMeth('edit',row)"
         />
       </template>
-    </BaseTitle>
-
-    <!-- <vxe-table
-      ref="xTable"
-      :data="dataSource"
-      keep-source
-      class="margin-top-10"
-      :loading="loading"
-      :edit-config="{ trigger: 'manual', mode: 'row' }"
+    </vxe-column>
+  </vxe-table>
+  <vxe-pager
+    background
+    align="right"
+    size="small"
+    v-model:current-page="queryParams.current"
+    v-model:page-size="queryParams.size"
+    :total="queryParams.total"
+    @page-change="getListMeth"
+    :layouts="['PrevPage', 'Number', 'NextPage', 'Sizes', 'FullJump', 'Total']"
+  >
     >
-      <vxe-column field="id" title="id"></vxe-column>
-      <vxe-column field="name" title="名称"></vxe-column>
-      <vxe-column field="icon" title="图标"></vxe-column>
-      <vxe-column field="href" title="链接"></vxe-column>
-      <vxe-column field="navTypeName" title="类型"></vxe-column>
-    </vxe-table> -->
+  </vxe-pager>
 
-    <!-- 添加导航类型 -->
-    <add-type-comp
-      v-if="visibleMeth.isQuickTypeAdd"
-      :isQuickTypeAdd="visibleMeth.isQuickTypeAdd"
-      @callBack="callBackTypeModal"
-    ></add-type-comp>
+  <!-- 添加导航类型 -->
+  <add-type-comp
+    v-if="visibleMeth.isQuickTypeAdd"
+    :isQuickTypeAdd="visibleMeth.isQuickTypeAdd"
+    @callBack="callBackTypeModal"
+  ></add-type-comp>
 
-    <!-- 添加导航 -->
-    <add-quick-nav-comp v-model:open="visibleMeth.isQuickNavAdd"></add-quick-nav-comp>
-  </div>
+  <!-- 添加导航 -->
+  <add-quick-nav-comp
+    ref="quickNavRef"
+    v-if="visibleMeth.isQuickNavAdd"
+    v-model:open="visibleMeth.isQuickNavAdd"
+    @update:getListMeth="getListMeth"
+  ></add-quick-nav-comp>
 </template>
 
 <script lang="ts">
+import {
+  reactive,
+  defineComponent,
+  onMounted,
+  ref,
+  toRefs,
+  nextTick,
+} from "vue";
+// components
 import BaseTitle from "/@/components/BaseTitle.vue";
 import addTypeComp from "./addType.vue";
 import addQuickNavComp from "./addQuickNav.vue";
-import { reactive, defineComponent, onMounted } from "vue";
-import QuickNav from "../../../api/quicknav";
+// api
+import QuickNavController from "../../../api/quicknav";
+// struct
 import { tableInfoStruct } from "./struct/index";
+// ui
+import { message as Message } from "ant-design-vue";
 export default defineComponent({
   components: { BaseTitle, addTypeComp, addQuickNavComp },
   setup(props) {
@@ -58,13 +103,13 @@ export default defineComponent({
       isQuickNavAdd: false, // 添加导航
     });
 
-    const tableInfo = reactive({
+    const tableInfo: tableInfoStruct = reactive({
       loading: false,
       dataSource: [],
       queryParams: {
         total: 0,
         size: 10,
-        current: 0,
+        current: 1,
       },
     });
 
@@ -83,29 +128,37 @@ export default defineComponent({
 
     // 获取数据列表
     const getListMeth = () => {
-      QuickNav.selectList().then((res) => {
+      QuickNavController.selectList(tableInfo.queryParams).then((res) => {
         tableInfo.queryParams.total = res.data.total;
         tableInfo.dataSource = res.data.records;
       });
     };
 
-    const btnHandleMeth = (type: string) => {
+    // 按钮操作
+    const quickNavRef = ref();
+    const btnHandleMeth = (type: string, rowItem: QuickNav.QuickNav) => {
       if (type == "add-quick-type") {
         visibleMeth.isQuickTypeAdd = true;
       } else if (type == "add-quick-nav") {
         visibleMeth.isQuickNavAdd = true;
+      } else if (type == "del") {
+        QuickNavController.delQuickNavOne(rowItem.id as string).then((res) => {
+          Message.success("删除成功");
+          getListMeth(); // 刷新列表
+        });
+      } else if (type == "edit") {
+        visibleMeth.isQuickNavAdd = true;
+        nextTick(() => {
+            quickNavRef.value.formParentMeth(rowItem);
+        });
       }
     };
 
-    // 提交按钮
-    const submitHandleMeth = () => {
-      console.log(123);
-    };
-
     return {
+      quickNavRef,
+      ...toRefs(tableInfo),
       visibleMeth,
       btnHandleMeth,
-      submitHandleMeth,
       callBackTypeModal,
       getListMeth,
     };
