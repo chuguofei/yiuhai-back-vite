@@ -8,15 +8,12 @@
       </a-menu-item>
     </a-menu>
     <div class="padding-5">
-      <router-view>
-      </router-view>
-      <!-- <a-config-provider :locale="zh_CN">
+      <!-- <router-view></router-view> -->
+      <a-config-provider :locale="zh_CN">
         <router-view v-slot="{ Component }">
-          <transition>
-            <component :is="Component" />
-          </transition>
+          <component :is="Component" />
         </router-view>
-      </a-config-provider> -->
+      </a-config-provider>
     </div>
   </div>
 </template>

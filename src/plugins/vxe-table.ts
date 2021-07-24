@@ -1,17 +1,47 @@
 import { App } from 'vue'
 import XEUtils from 'xe-utils'
+import 'xe-utils';
+import 'vxe-table/lib/style.css';
 import {
+    // 核心
     VXETable,
-    Header,
+    // 功能模块
     Icon,
+    // Filter,
+    // Menu,
+    Edit,
+    // Export,
+    // Keyboard,
+    Validator,
+    Header,
+    // Footer,
+    // 可选组件
     Column,
-    Table,
+    // Colgroup,
+    // Grid,
+    // Toolbar,
+    Pager,
+    // Checkbox,
+    // CheckboxGroup,
+    // Radio,
+    // RadioGroup,
+    // RadioButton,
+    Input,
+    // Textarea,
+    Button,
+    Modal,
+    // Tooltip,
     Form,
     FormItem,
-    Validator,
-    Input,
-    Button,
-    Select
+    // FormGather,
+    Select,
+    // Optgroup,
+    Option,
+    // Switch,
+    // List,
+    // Pulldown,
+    // 表格
+    Table
 } from 'vxe-table';
 import zhCNLocat from 'vxe-table/es/locale/lang/zh-CN'
 
@@ -29,6 +59,8 @@ VXETable.setup({
     i18n: (key, args) => XEUtils.toFormatString(XEUtils.get(zhCNLocat, key), args)
 })
 
+// 按需引入
+// https://xuliangzhan_admin.gitee.io/vxe-table/#/table/start/use
 export function useTable(app: App) {
     app.use(Header)
         .use(Icon)
@@ -40,5 +72,9 @@ export function useTable(app: App) {
         .use(Input)
         .use(Button)
         .use(Select)
+        .use(Option)
+        .use(Edit)
+        .use(Pager)
+        .use(Modal)
 }
 

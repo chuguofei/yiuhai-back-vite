@@ -26,8 +26,16 @@
   >
     <vxe-column field="id" title="id"></vxe-column>
     <vxe-column field="name" title="名称"></vxe-column>
-    <vxe-column field="icon" title="图标"></vxe-column>
-    <vxe-column field="href" title="链接"></vxe-column>
+    <vxe-column title="图标">
+      <template #default="{ row }">
+        <img :src="row.icon" width="30" height="30" />
+      </template>
+    </vxe-column>
+    <vxe-column field="href" title="链接">
+      <template #default="{ row }">
+        <a :href="row.href" target="_blank">{{ row.href }}</a>
+      </template>
+    </vxe-column>
     <vxe-column field="navTypeName" title="类型"></vxe-column>
     <vxe-column title="操作">
       <template #default="{ row }">
@@ -42,7 +50,7 @@
         <vxe-button
           status="warning"
           v-text="'修改'"
-          @click="btnHandleMeth('edit',row)"
+          @click="btnHandleMeth('edit', row)"
         />
       </template>
     </vxe-column>
@@ -77,14 +85,7 @@
 </template>
 
 <script lang="ts">
-import {
-  reactive,
-  defineComponent,
-  onMounted,
-  ref,
-  toRefs,
-  nextTick,
-} from "vue";
+import { reactive, defineComponent, onMounted, ref, toRefs, nextTick } from "vue";
 // components
 import BaseTitle from "/@/components/BaseTitle.vue";
 import addTypeComp from "./addType.vue";
@@ -149,7 +150,7 @@ export default defineComponent({
       } else if (type == "edit") {
         visibleMeth.isQuickNavAdd = true;
         nextTick(() => {
-            quickNavRef.value.formParentMeth(rowItem);
+          quickNavRef.value.formParentMeth(rowItem);
         });
       }
     };
