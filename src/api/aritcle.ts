@@ -29,6 +29,20 @@ class Aritcle {
     }
 
     /**
+     * @description 修改一片博客
+     * @param data 
+     * @returns 
+     */
+     public saveAritcleContentApi(data: Aritcle.AritcleStruct): Promise<CallBack.Response> {
+        return request.axios({
+            url: "/blogapi/blogArticle/saveAritcleContent",
+            method: "put",
+            data
+        });
+    }
+    
+
+    /**
     * @description 删除一片博客
     * @param data 
     * @returns 

@@ -10,7 +10,6 @@
     "@kangc/v-md-editor": "^2.3.5",
     "ant-design-vue": "2.1.2",
     "axios": "^0.21.1",
-    "default-passive-events": "^2.0.0",
     "highlight.js": "^11.0.1",
     "lodash-es": "^4.17.21",
     "prismjs": "^1.23.0",

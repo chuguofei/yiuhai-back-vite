@@ -31,6 +31,7 @@
             <div class="ant-upload-text">上传</div>
           </div>
         </a-upload>
+        <a-input v-model:value="formState.data.articleImg" />
       </a-form-item>
       <a-form-item label="文章说明" name="articleExplain">
         <a-textarea
@@ -118,6 +119,7 @@
       <a-form-item label="文章MD" name="articleContent">
         <!-- 写md组件 -->
         <v-md-editor
+          @save="editorSaveMeth"
           @change="editorChangeMeth"
           v-model="formState.data.articleContent"
           :disabled-menus="[]"
@@ -132,7 +134,7 @@
 <script lang="ts">
 import { defineComponent, reactive, ref, toRefs, onMounted } from "vue";
 import { uuid } from "vue-uuid";
-import { cloneDeep } from "lodash-es";
+import { cloneDeep, debounce, chunk } from "lodash-es";
 import BaseTitle from "/@/components/BaseTitle.vue";
 import { message as Message } from "ant-design-vue";
 import {
@@ -255,7 +257,7 @@ export default defineComponent({
         percent: 99,
       };
       fileList.value = [imgItem];
-      Base.ossUploadApi(file.file, _uuid).then((res: any) => {
+      Base.ImageCompressor(file.file, false).then((res: any) => {
         Message.success("上传成功");
         const imgItem = {
           uid: _uuid,
@@ -270,8 +272,8 @@ export default defineComponent({
       });
     };
 
-    const mkdownImgUploadMeth = (event: any, insertImage: any, file: File) => {
-      Base.ImageCompressor(file, true).then((img_url: String) => {
+    const mkdownImgUploadMeth = (event: any, insertImage: any, file: Array<File>) => {
+      Base.ImageCompressor(file[0], true).then((img_url: String) => {
         console.log(img_url);
         insertImage({
           url: img_url,
@@ -321,8 +323,22 @@ export default defineComponent({
       }
     };
 
+    /**
+     * @description 保存文章，防抖操作
+     */
+    const editorSaveMeth = debounce((text: any, html: any) => {
+      const submitForm = {
+        id: formState.data.id,
+        articleContent: formState.data.articleContent,
+      };
+      Aritcle.saveAritcleContentApi(submitForm).then((result: CallBack.Response) => {
+        Message.success("保存成功");
+      });
+    }, 500);
+
     const editorChangeMeth = (text: any, html: any) => {
-      console.log(text, html);
+      // 实时跟新
+      // console.log(text, html);
     };
 
     // 导出method
@@ -336,6 +352,7 @@ export default defineComponent({
       handleChangeMeth, // 图片上传
       mkdownImgUploadMeth, // makedown 上传图片
       formParentMeth,
+      editorSaveMeth, // 编辑器保存
       editorChangeMeth, // 编辑器更改
     };
 

@@ -3,7 +3,7 @@ import App from './App.vue'
 import router from './router';
 import vuex from './vuex';
 import '/@/assets/css/index.scss';
-import 'default-passive-events'
+// import 'default-passive-events'
 
 import { useTable } from './plugins/vxe-table';
 import { useAntd } from './plugins/antd';

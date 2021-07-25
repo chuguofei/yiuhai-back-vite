@@ -1,2 +1,6 @@
 @import "./btn.scss";
 @import "./common.scss";
+
+* {
+  touch-action: pan-y;
+}
