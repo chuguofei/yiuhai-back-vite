@@ -1,6 +1,11 @@
 @import "./btn.scss";
 @import "./common.scss";
+@import "./animation.scss";
 
 * {
   touch-action: pan-y;
+}
+#app {
+  width: 100%;
+  height: 100%;
 }

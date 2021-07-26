@@ -1,0 +1,91 @@
+@use "sass:math";
+
+.fade-in {
+    animation: animationOpacity 2s;
+}
+
+@keyframes animationOpacity {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 100;
+    }
+}
+
+// ------ 显示动画
+.enter-x {
+    transform: translateX(50px);
+    opacity: 0;
+    animation: enter-x-animation 0.4s ease-in-out 0.5s;
+    animation-fill-mode: forwards;
+    @for $i from 1 to 50 {
+        &:nth-child(#{$i}) {
+            animation-delay: math.div($i * 1, 10) + s;
+        }
+    }
+}
+
+.-enter-x {
+    transform: translateX(-50px);
+    opacity: 0;
+    animation: -enter-x-animation 0.4s ease-in-out 0.5s;
+    animation-fill-mode: forwards;
+    @for $i from 1 to 50 {
+        &:nth-child(#{$i}) {
+            animation-delay: math.div($i * 1, 10) + s;
+        }
+    }
+}
+
+.enter-y {
+    transform: translateY(50px);
+    opacity: 0;
+    animation: enter-y-animation 0.3s ease-in-out 0.5s;
+    animation-fill-mode: forwards;
+    @for $i from 1 to 50 {
+        &:nth-child(#{$i}) {
+            animation-delay: math.div($i * 1, 10) + s;
+        }
+    }
+}
+
+.-enter-y {
+    transform: translateY(-50px);
+    opacity: 0;
+    animation: enter-y-animation 0.4s ease-in-out 0.5s;
+    animation-fill-mode: forwards;
+    @for $i from 1 to 50 {
+        &:nth-child(#{$i}) {
+            animation-delay: math.div($i * 1, 10) + s;
+        }
+    }
+}
+
+@keyframes enter-y-animation {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes -enter-y-animation {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes enter-x-animation {
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes -enter-x-animation {
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}

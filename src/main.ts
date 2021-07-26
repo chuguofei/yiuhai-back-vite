@@ -8,7 +8,6 @@ import '/@/assets/css/index.scss';
 import { useTable } from './plugins/vxe-table';
 import { useAntd } from './plugins/antd';
 import { useMakedown } from './plugins/markdown';
-
 const app = createApp(App);
 app.use(router);
 app.use(vuex);
