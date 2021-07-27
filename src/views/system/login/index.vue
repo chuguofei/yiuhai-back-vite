@@ -79,8 +79,8 @@ export default defineComponent({
 
 
 <style scoped lang="scss">
-$login-bg-img: url("@/assets/images/login/default-login-bg.svg");
-$login-body-left-img: url("@/assets/images/login/login-body-left.svg");
+$login-bg-img: url("/@/assets/images/login/default-login-bg.svg");
+$login-body-left-img: url("/@/assets/images/login/login-body-left.svg");
 .login-box {
   width: 100%;
   height: 100vh;

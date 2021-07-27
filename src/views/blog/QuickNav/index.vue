@@ -91,7 +91,7 @@ import BaseTitle from "/@/components/BaseTitle.vue";
 import addTypeComp from "./addType.vue";
 import addQuickNavComp from "./addQuickNav.vue";
 // api
-import QuickNavController from "/api/api/blog/quicknav";
+import QuickNavController from "/@/api/blog/quicknav";
 // struct
 import { tableInfoStruct } from "./struct/index";
 // ui

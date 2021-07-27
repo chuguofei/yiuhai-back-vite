@@ -1,11 +1,11 @@
-import request from ".";
+import request from "./index";
 import ImageCompressor from "js-image-compressor";
 import { uuid } from "vue-uuid";
 import { message as Message } from "ant-design-vue";
 
-let _water_mark_text = "www.guofeian.cn";
-
 class Base {
+  private _water_mark_text: string = "www.guofeian.cn";
+  private _host_suffix_url: string = "img.guofeian.cn";
   private apiGroupName: string = "base";
 
   /**
@@ -41,18 +41,17 @@ class Base {
         formData.append("dir", ossPolicy.dir);
         formData.append("host", ossPolicy.host);
         formData.append("file", file);
-        // formData.append("file", {"key":"测试"});
         request
           .axios({
             url: `https://gf-oss.oss-cn-beijing.aliyuncs.com`,
             method: "post",
-            // headers: {
-            //   ContentType: "image/gif",
-            // },
+            headers: {
+              ContentType: "image/jpg",
+            },
             data: formData,
           })
           .then((res: any) => {
-            resolve(ossPolicy.host + "/" + filename);
+            resolve(`http://${this._host_suffix_url}/${filename}`);
           });
       });
     });
@@ -86,7 +85,6 @@ class Base {
           //     resolve(e.target.result);
           // }
           // a.readAsDataURL(blob);
-
           let chuliImg = new window.File([blob], _uuid, { type: file.type });
           this.ossUploadApi(chuliImg, _uuid).then((result) => {
             Message.destroy();
@@ -109,7 +107,7 @@ class Base {
             ctx.fillStyle = "#fff";
             ctx.font = canvas.width * 0.02 + "px microsoft yahei";
             ctx.fillText(
-              _water_mark_text,
+              this._water_mark_text,
               canvas.width * 0.82,
               canvas.height - 25
             );

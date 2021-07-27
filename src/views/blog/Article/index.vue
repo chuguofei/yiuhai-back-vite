@@ -48,7 +48,7 @@ import ArticleAddCom from "./ArticleAdd.vue";
 import { dataState, tableColumn } from "./index.data";
 import { message as Message } from "ant-design-vue";
 // api
-import Aritcle from "/@/api/aritcle";
+import Aritcle from "/@/api/blog/aritcle";
 
 export default defineComponent({
   setup() {

@@ -144,9 +144,9 @@ import {
   LoadingOutlined,
 } from "@ant-design/icons-vue";
 // api
-import Aritcle from "/@/api/blogaritcle";
+import Aritcle from "/@/api/blog/aritcle";
 import Category from "/@/api/blog/category.ts";
-import Base from "../../../api/base.ts";
+import Base from "/@/api/base.ts";
 
 export default defineComponent({
   components: { BaseTitle, CloseOutlined, UploadOutlined, PlusOutlined, LoadingOutlined },
