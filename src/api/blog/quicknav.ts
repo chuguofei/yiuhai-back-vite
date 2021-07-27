@@ -1,16 +1,16 @@
-import request from '.';
+import request from '../';
 import qs from 'qs';
 
-class QuickNavType {
+class QuickNavController {
 
     /**
      * @description 导航立列表
      * @param data 
      * @returns 
      */
-    public list(data?: QuickNav.QuickNavType): Promise<CallBack.ResponseTable> {
+    public selectList(data?: QuickNav.QuickNav): Promise<CallBack.ResponseTable> {
         return request.axios({
-            url: `/blogapi/quickNavType/selectList`,
+            url: `/blogapi/quickNav/selectList?` + qs.stringify(data),
             method: "get",
         })
     }
@@ -21,9 +21,9 @@ class QuickNavType {
      * @param data 
      * @returns 
      */
-    public addQuickTypeOneApi(data?: QuickNav.QuickNavType): Promise<CallBack.ResponseTable> {
+    public addQuickNavOneApi(data?: QuickNav.QuickNav): Promise<CallBack.ResponseTable> {
         return request.axios({
-            url: `/blogapi/quickNavType/addQuickTypeOne`,
+            url: `/blogapi/quickNav/addQuickNavOne`,
             method: "post",
             data,
         })
@@ -34,9 +34,9 @@ class QuickNavType {
     * @param data 
     * @returns 
     */
-    public updateTypeOne(data?: QuickNav.QuickNavType): Promise<CallBack.ResponseTable> {
+    public updateNavOne(data?: QuickNav.QuickNav): Promise<CallBack.ResponseTable> {
         return request.axios({
-            url: `/blogapi/quickNavType/updateQuickTypeOne`,
+            url: `/blogapi/quickNav/updateQuickNavOne`,
             method: "put",
             data,
         })
@@ -47,12 +47,12 @@ class QuickNavType {
      * @param data 
      * @returns 
      */
-    public delQuickTypeOne(id?: Number): Promise<CallBack.ResponseTable> {
+    public delQuickNavOne(id?: string): Promise<CallBack.ResponseTable> {
         return request.axios({
-            url: `/blogapi/quickNavType/delQuickTypeOne/${id}`,
+            url: `/blogapi/quickNav/removeQuickNavOne/${id}`,
             method: "delete",
         });
     }
 }
 
-export default new QuickNavType();
+export default new QuickNavController();

@@ -70,7 +70,7 @@
 
 <script lang="ts">
 import { reactive, toRefs, ref, onMounted } from "vue";
-import QuickNavType from "../../../api/quicknav-type";
+import QuickNavType from "/api/api/blog/quicknav-type";
 import { VxeFormEvents, VxeTableInstance } from "vxe-table";
 import { message as Message } from "ant-design-vue";
 export default {

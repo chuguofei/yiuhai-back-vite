@@ -39,8 +39,8 @@
 
 <script lang="ts">
 import { defineComponent, reactive, toRefs, ref, onMounted } from "vue";
-import QuickNavType from "../../../api/quicknav-type";
-import QuickNavController from "../../../api/quicknav";
+import QuickNavType from "/@/api/blog/quicknav-type";
+import QuickNavController from "/@/api/blog/quicknav";
 import { message as Message } from 'ant-design-vue';
 // struct 
 import { modalInfoStruct } from './struct/add-quick-nav';

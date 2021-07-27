@@ -1,7 +1,8 @@
 import axios, { AxiosInstance } from 'axios';
 import { message as Message } from "ant-design-vue";
 import { get } from "lodash-es";
-
+import router from '../router/index'
+import { registerRuntimeHelpers } from '@vue/compiler-core';
 
 export default class MyAxios {
 
@@ -35,12 +36,21 @@ export default class MyAxios {
      */
     private onResponse() {
         this.axios.interceptors.response.use((response: any) => {
-            if (response.data.code == 500) {
-                Message.error(response.data.msg);
-                return Promise.reject(response.data.msg);
+            let { data,code,msg } = response.data;
+            if (data != undefined && data != null){
+                return data;
             }
-            
-            return response.data;
+            if (data == 500) {
+                Message.error(msg);
+                return Promise.reject(msg);
+            }
+            if(code == 401 || code == 403){
+                Message.error(msg);
+                setTimeout(() => {
+                    router.replace("/login");
+                }, 1000);
+            }
+            return Promise.reject(msg);
         }, (error: any) => {
             console.log(`路由${error.config.url}请求失败，耗时${new Date().getTime() - error.config.startTime}ms`);
             const status = get(error, "response.status");

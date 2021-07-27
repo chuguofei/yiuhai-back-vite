@@ -1,16 +1,15 @@
-import request from '.';
-import qs from 'qs';
+import request from '../';
 
-class QuickNavController {
+class QuickNavType {
 
     /**
      * @description 导航立列表
      * @param data 
      * @returns 
      */
-    public selectList(data?: QuickNav.QuickNav): Promise<CallBack.ResponseTable> {
+    public list(data?: QuickNav.QuickNavType): Promise<CallBack.ResponseTable> {
         return request.axios({
-            url: `/blogapi/quickNav/selectList?` + qs.stringify(data),
+            url: `/blogapi/quickNavType/selectList`,
             method: "get",
         })
     }
@@ -21,9 +20,9 @@ class QuickNavController {
      * @param data 
      * @returns 
      */
-    public addQuickNavOneApi(data?: QuickNav.QuickNav): Promise<CallBack.ResponseTable> {
+    public addQuickTypeOneApi(data?: QuickNav.QuickNavType): Promise<CallBack.ResponseTable> {
         return request.axios({
-            url: `/blogapi/quickNav/addQuickNavOne`,
+            url: `/blogapi/quickNavType/addQuickTypeOne`,
             method: "post",
             data,
         })
@@ -34,9 +33,9 @@ class QuickNavController {
     * @param data 
     * @returns 
     */
-    public updateNavOne(data?: QuickNav.QuickNav): Promise<CallBack.ResponseTable> {
+    public updateTypeOne(data?: QuickNav.QuickNavType): Promise<CallBack.ResponseTable> {
         return request.axios({
-            url: `/blogapi/quickNav/updateQuickNavOne`,
+            url: `/blogapi/quickNavType/updateQuickTypeOne`,
             method: "put",
             data,
         })
@@ -47,12 +46,12 @@ class QuickNavController {
      * @param data 
      * @returns 
      */
-    public delQuickNavOne(id?: string): Promise<CallBack.ResponseTable> {
+    public delQuickTypeOne(id?: Number): Promise<CallBack.ResponseTable> {
         return request.axios({
-            url: `/blogapi/quickNav/removeQuickNavOne/${id}`,
+            url: `/blogapi/quickNavType/delQuickTypeOne/${id}`,
             method: "delete",
         });
     }
 }
 
-export default new QuickNavController();
+export default new QuickNavType();

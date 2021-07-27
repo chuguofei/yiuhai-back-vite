@@ -25,7 +25,6 @@ class Base {
   public ossUploadApi(file: File, uuid: string) {
     return new Promise((resolve, reject) => {
       this.getOssPolicy().then((result: any) => {
-        console.log(file);
         let ossPolicy: BaseStruct.OssPolicy = result.data;
         var formData: any = new FormData();
         formData.append("policy", ossPolicy.policy);
@@ -38,11 +37,11 @@ class Base {
         let now = new Date().getTime();
         let filename =
           ossPolicy.dir + uuid.substring(0, 24) + "-" + now + "." + suffix;
-        console.log(filename);
         formData.append("key", filename);
         formData.append("dir", ossPolicy.dir);
         formData.append("host", ossPolicy.host);
         formData.append("file", file);
+        // formData.append("file", {"key":"测试"});
         request
           .axios({
             url: `https://gf-oss.oss-cn-beijing.aliyuncs.com`,

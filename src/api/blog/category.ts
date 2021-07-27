@@ -1,5 +1,5 @@
-import request from '.';
-import { RequestMethType } from '../struct/common/request-meth-type'
+import request from '../';
+import { RequestMethType } from '../../struct/common/request-meth-type'
 import qs from "qs";
 
 class Category {

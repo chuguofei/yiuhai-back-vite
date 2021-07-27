@@ -1,7 +1,7 @@
-import { defineConfig } from 'vite'
+import type { UserConfig } from 'vite';
 import vue from '@vitejs/plugin-vue'
 import { resolve } from 'path'
-// 按需引入
+// 按需导入组件库样式的插件
 import styleImport from 'vite-plugin-style-import'
 
 
@@ -9,8 +9,18 @@ function pathResolve(dir: string) {
   return resolve(process.cwd(), '.', dir);
 }
 
-// https://vitejs.dev/config/
-export default defineConfig({
+
+const viteConfig: UserConfig = {
+  build: {
+    // 打包输出目录
+    outDir: 'dist',
+    // 指定生成静态资源的存放路径
+    assetsDir:"assets",
+    // 小于此阈值的导入或引用资源将内联为 base64 编码，以避免额外的 http 请求,设置为 0 可以完全禁用此项。
+    assetsInlineLimit:4096,
+    // 源码映射
+    sourcemap: true,
+  },
   css: {
     preprocessorOptions: {
       less: {
@@ -60,4 +70,10 @@ export default defineConfig({
       }
     }
   }
-})
+}
+
+// https://vitejs.dev/config/
+// https://gitee.com/wkl--007/vue-vben-admin/blob/main/vite.config.ts
+export default {
+  ...viteConfig,
+} as UserConfig

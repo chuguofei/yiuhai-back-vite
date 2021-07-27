@@ -61,7 +61,7 @@ import { RequestMethType } from "../../struct/common/request-meth-type";
 import { reactive, toRefs, ref, onMounted } from "vue";
 import { cloneDeep } from "lodash-es";
 // api
-import Category from "/@/api/category";
+import Category from "/@/api/blog/category";
 export default {
   components: { BaseTitle },
   setup() {

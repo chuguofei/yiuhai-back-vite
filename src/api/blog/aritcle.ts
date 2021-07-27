@@ -1,4 +1,4 @@
-import request from '.';
+import request from '../';
 import qs from 'qs';
 class Aritcle {
 
