@@ -39,11 +39,11 @@ export default class MyAxios {
         let { data, code, msg } = response.data;
         if (data != undefined && data != null) {
           return response.data;
-        } else if (response.config.url.indexOf("aliyun")) {
+        } else if (response.config.url.indexOf("aliyun") > -1) {
           // 如果是oss上传放行。
           return null;
         }
-        if (data == 500) {
+        if (code == 500) {
           Message.error(msg);
           return Promise.reject(msg);
         }
