@@ -1,6 +1,6 @@
 <template>
   <a-menu mode="inline">
-    <template v-for="item in menuBarArr">
+    <template v-for="item in menuBarArr" :key="item.router">
       <a-sub-menu v-if="item.children">
         <template #icon>
           <MailOutlined />
@@ -24,18 +24,15 @@
   </a-menu>
 </template>
 
-
 <script lang="ts">
-import { defineComponent,watch,ref } from "vue";
+import { defineComponent, watch, ref } from "vue";
 export default defineComponent({
   props: {
     menuBarArr: {
       type: Array,
-      default:()=>[]
+      default: () => [],
     },
   },
-  setup() {
-  
-  },
+  setup() {},
 });
 </script>

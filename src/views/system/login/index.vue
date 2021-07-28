@@ -9,11 +9,7 @@
           </div>
           <a-form :form="submitForm" :wrapper-col="{ span: 24 }">
             <a-form-item class="enter-x">
-              <a-input
-                v-model:value="submitForm.username"
-                :maxLength="11"
-                allowClear
-              >
+              <a-input v-model:value="submitForm.username" :maxLength="11" allowClear>
                 <template #prefix
                   ><UserOutlined style="color: rgba(0, 0, 0, 0.25)"
                 /></template>
@@ -32,7 +28,13 @@
               </a-input>
             </a-form-item>
             <a-form-item class="enter-x">
-              <a-button block type="primary" @click="submitHandleMeth()">登录</a-button>
+              <a-button
+                :loading="loginLoading"
+                block
+                type="primary"
+                @click="submitHandleMeth()"
+                >登录</a-button
+              >
             </a-form-item>
           </a-form>
         </div>
@@ -48,13 +50,18 @@ import { UserOutlined, LockOutlined } from "@ant-design/icons-vue";
 // struct
 import { loginStateStruct } from "./struct/login";
 // api
-import LoginController from '/@/api/system/login.ts'
+import LoginController from "/@/api/system/login.ts";
+import { message as Message } from "ant-design-vue";
+import { useRouter } from "vue-router";
 export default defineComponent({
   components: {
     UserOutlined,
     LockOutlined,
   },
   setup() {
+    const router = useRouter();
+    const loginLoading = ref<Boolean>(false);
+
     const loginState: loginStateStruct = reactive({
       submitForm: {
         username: "",
@@ -62,21 +69,28 @@ export default defineComponent({
       },
     });
 
-
-    const submitHandleMeth = ()=>{
-      LoginController.loginApi(loginState.submitForm).then((res:CallBack.Response)=>{
-
-      })
-    }
+    const submitHandleMeth = () => {
+      loginLoading.value = true;
+      LoginController.loginApi(loginState.submitForm)
+        .then((res: CallBack.Response) => {
+          Message.success("登录成功");
+          loginLoading.value = false;
+          router.push("/");
+          
+        })
+        .catch((err: any) => {
+          loginLoading.value = false;
+        });
+    };
 
     return {
       ...toRefs(loginState),
-      submitHandleMeth
+      submitHandleMeth,
+      loginLoading,
     };
   },
 });
 </script>
-
 
 <style scoped lang="scss">
 $login-bg-img: url("/@/assets/images/login/default-login-bg.svg");

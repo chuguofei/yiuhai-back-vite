@@ -1,10 +1,5 @@
 <template>
   <a-layout style="width: 100%; height: 100%">
-    <a-layout-header class="header">
-      <div style="border-bottom:1px #ccc solid;">
-          <img src="../..//assets/logo.png" width="50"/>
-      </div>
-    </a-layout-header>
     <a-layout class="flex height--100">
       <a-layout-sider
         :style="{
@@ -14,9 +9,15 @@
           left: 0,
         }"
       >
+        <div style="border-bottom: 1px #ccc solid" class="text-center">
+          <img src="../../assets/logo.png" width="50" />
+        </div>
         <MenuComponent :menuBarArr="menuBarArr"></MenuComponent>
       </a-layout-sider>
       <a-layout :style="{ marginLeft: '200px', width: `calc(100% - 200px)` }">
+        <a-layout-header style="border: 1px #ccc solid" class="height-50 width--100">
+          头部导航
+        </a-layout-header>
         <a-layout-header :style="{ background: '#fff', padding: 0 }">
           <BreadcrumbComponent :breadCrumbArray="breadCrumbArray"></BreadcrumbComponent>
         </a-layout-header>
@@ -26,7 +27,7 @@
             margin: 0,
             minHeight: '280px',
             width: '100%',
-            paddingTop: '10px'
+            paddingTop: '10px',
           }"
         >
           <a-config-provider :locale="zh_CN">
@@ -49,15 +50,15 @@ import {
   getCurrentInstance,
   onMounted,
   watch,
-  computed
+  computed,
 } from "vue";
 import zh_CN from "ant-design-vue/lib/locale-provider/zh_CN";
 // components
 import MenuComponent from "./Menu.vue";
 import BreadcrumbComponent from "./Breadcrumb.vue";
-import { useRouter } from 'vue-router'
+import { useRouter } from "vue-router";
 export default defineComponent({
-  components: { MenuComponent,BreadcrumbComponent },
+  components: { MenuComponent, BreadcrumbComponent },
   data() {
     return {
       zh_CN,
@@ -71,8 +72,10 @@ export default defineComponent({
     const Router = useRouter();
 
     // 面包屑
-    const breadCrumbComputed = ()=>{
-      let matched = Router.currentRoute.value.matched.filter(item => item.meta && item.meta.title);
+    const breadCrumbComputed = () => {
+      let matched = Router.currentRoute.value.matched.filter(
+        (item) => item.meta && item.meta.title
+      );
       breadCrumbArray.value = matched;
     };
 
@@ -82,9 +85,9 @@ export default defineComponent({
       (val) => {
         breadCrumbComputed();
       }
-    )
+    );
 
-    onMounted(()=>{
+    onMounted(() => {
       breadCrumbComputed();
     });
 
