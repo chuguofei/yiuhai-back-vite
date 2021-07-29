@@ -27,8 +27,8 @@ export default class MyAxios {
       let options = {
         startTime: new Date().getTime(),
       };
-      // config.headers['Authorization'] = 'eyJhbGciOiJIUzUxMiJ9.eyJMT0dJTl9VU0VSX1RPS0VOX0tFWSI6IjY2OGVmMmE1LTRlZTktNGE3Yy04ZDU4LTZkYzJlMGU4N2Y3NGFkbWluIn0.V_74eezrXUTR81LTD53P2mmRFVdvAkDdssO8_BRfPfRKxU6u7TNaiDc-ZTtcrHcKFFGKtg3fD64CwRMdCXjcmg'
-      return config;
+      // https://github.com/xiaoxian521/vue-pure-admin/blob/main/src/utils/http/config.ts
+      return { ...config, options };
     });
   }
 
