@@ -13,9 +13,9 @@
         "esModuleInterop": true,
         "baseUrl": ".",
         "paths": {
-            "@": [
-                "./src"
-            ]
+            "/@/*": [
+                "src/*"
+            ],
         },
         "lib": [
             "esnext",
@@ -24,17 +24,22 @@
             "scripthost"
         ],
         "types": [
-            "vite/client"
+            "vite/client",
         ],
+        "typeRoots": [
+            "./node_modules/@types/",
+            "./types"
+        ]
     },
     "include": [
         "src/**/*.js",
         "src/**/*.ts",
-        "src/**/*.d.ts",
         "src/**/*.tsx",
-        "src/**/*.vue"
+        "src/**/*.vue",
+        "src/**/*.d.ts",
     ],
     "exclude": [
-        "node_modules"
+        "node_modules",
+        "dist",
     ],
 }
