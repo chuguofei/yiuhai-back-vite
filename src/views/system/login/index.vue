@@ -76,7 +76,6 @@ export default defineComponent({
           Message.success("登录成功");
           loginLoading.value = false;
           router.push("/");
-          
         })
         .catch((err: any) => {
           loginLoading.value = false;

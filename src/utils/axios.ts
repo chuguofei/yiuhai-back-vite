@@ -1,8 +1,7 @@
-import axios, { AxiosInstance } from "axios";
+import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
 import { message as Message } from "ant-design-vue";
 import { get } from "lodash-es";
 import router from "../router/index";
-import { registerRuntimeHelpers } from "@vue/compiler-core";
 
 export default class MyAxios {
   public axios: AxiosInstance;
@@ -24,8 +23,10 @@ export default class MyAxios {
    * @description 拦截器
    */
   private onRequest() {
-    this.axios.interceptors.request.use((config: any) => {
-      config.startTime = new Date().getTime();
+    this.axios.interceptors.request.use((config: AxiosRequestConfig) => {
+      let options = {
+        startTime: new Date().getTime(),
+      };
       // config.headers['Authorization'] = 'eyJhbGciOiJIUzUxMiJ9.eyJMT0dJTl9VU0VSX1RPS0VOX0tFWSI6IjY2OGVmMmE1LTRlZTktNGE3Yy04ZDU4LTZkYzJlMGU4N2Y3NGFkbWluIn0.V_74eezrXUTR81LTD53P2mmRFVdvAkDdssO8_BRfPfRKxU6u7TNaiDc-ZTtcrHcKFFGKtg3fD64CwRMdCXjcmg'
       return config;
     });
@@ -36,11 +37,11 @@ export default class MyAxios {
    */
   private onResponse() {
     this.axios.interceptors.response.use(
-      (response: any) => {
+      (response: AxiosResponse) => {
         let { data, code, msg } = response.data;
         if (data != undefined && data != null) {
           return response.data;
-        } else if (response.config.url.indexOf("aliyun") > -1) {
+        } else if ((response.config.url as string).indexOf("aliyun") > -1) {
           // 如果是oss上传放行。
           return null;
         }

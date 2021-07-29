@@ -1,19 +1,16 @@
 <template>
-  <div>
-    首页=-
-    {{ store.msg }}
-  </div>
+  <div>首页=-{{ _sysUserStore.counter }}</div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
-import { useStore } from "/@/store/index";
+import { defineComponent, computed } from "vue";
+import { sysUserStore } from "/@/store/modules/sys-user";
 export default defineComponent({
   setup() {
-    const store = useStore();
+    const _sysUserStore = sysUserStore();
 
     return {
-      store,
+      _sysUserStore: _sysUserStore,
     };
   },
 });
