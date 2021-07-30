@@ -9,15 +9,12 @@
           left: 0,
         }"
       >
-        <div style="border-bottom: 1px #ccc solid" class="text-center">
-          <img src="../../assets/logo.png" width="50" />
+        <div style="border-bottom: 0px #ccc solid" class="text-center">
+          <img src="../../assets/logo.png" width="130"/>
         </div>
         <MenuComponent :menuBarArr="menuBarArr"></MenuComponent>
       </a-layout-sider>
       <a-layout :style="{ marginLeft: '200px', width: `calc(100% - 200px)` }">
-        <a-layout-header style="border: 1px #ccc solid" class="height-50 width--100">
-          头部导航
-        </a-layout-header>
         <a-layout-header :style="{ background: '#fff', padding: 0 }">
           <BreadcrumbComponent :breadCrumbArray="breadCrumbArray"></BreadcrumbComponent>
         </a-layout-header>

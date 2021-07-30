@@ -53,6 +53,8 @@ export default class MyAxios {
           return Promise.reject(msg);
         }
         if (code == 401 || code == 403) {
+          // 清楚token
+          CookiesUtils.cleanToken();
           Message.error(msg);
           setTimeout(() => {
             router.replace("/login");

@@ -19,6 +19,13 @@ class CookiesUtils {
         return Cookies.get(this.tokenKey) as string;
     }
 
+    /**
+     * @description 清空token
+     */
+    public cleanToken(){
+        Cookies.remove(this.tokenKey);
+    }
+
 }
 
 export default new CookiesUtils;

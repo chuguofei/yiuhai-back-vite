@@ -80,7 +80,6 @@ export default defineComponent({
       loginLoading.value = true;
       _sysUserStore.USER_LOGIN(loginState.submitForm).then(result=>{
         loginLoading.value = false;
-        router.push("/");
       }).catch((err:any)=>{
         loginLoading.value = false;
       });

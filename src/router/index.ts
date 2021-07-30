@@ -31,5 +31,4 @@ const router = createRouter({
   history: createWebHashHistory(),
   routes: route
 });
-import './router-filter';
 export default router;

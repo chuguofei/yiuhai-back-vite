@@ -1,9 +1,11 @@
 import { createApp } from "vue";
 import App from "./App.vue";
 import router from "./router";
-import { setRouterGuards } from '/@/router/router-filter'
+import { setRouterGuards } from '/@/router/router-guard'
 import { setupStore } from "./store";
 import "/@/assets/css/index.scss";
+import 'default-passive-events'
+
 
 import { useTable } from "./plugins/vxe-table";
 import { useAntd } from "./plugins/antd";

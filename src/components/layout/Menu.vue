@@ -14,7 +14,7 @@
       </a-sub-menu>
       <a-menu-item v-else>
         <template #icon>
-          <PieChartOutlined />
+          <MailOutlined />
         </template>
         <router-link :to="item.router">
           {{ item.label }}
@@ -26,7 +26,9 @@
 
 <script lang="ts">
 import { defineComponent, watch, ref } from "vue";
+import { MailOutlined } from "@ant-design/icons-vue";
 export default defineComponent({
+  components: { MailOutlined },
   props: {
     menuBarArr: {
       type: Array,
