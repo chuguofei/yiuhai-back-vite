@@ -1,6 +1,7 @@
 import { createApp } from "vue";
 import App from "./App.vue";
 import router from "./router";
+import { setRouterGuards } from '/@/router/router-filter'
 import { setupStore } from "./store";
 import "/@/assets/css/index.scss";
 
@@ -10,6 +11,7 @@ import { useMakedown } from "./plugins/markdown";
 const app = createApp(App);
 app.use(router);
 setupStore(app);
+setRouterGuards(router);
 app.use(useMakedown);
 app.use(useAntd);
 app.use(useTable);

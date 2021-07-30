@@ -53,12 +53,16 @@ import { loginStateStruct } from "./struct/login";
 import LoginController from "/@/api/system/login.ts";
 import { message as Message } from "ant-design-vue";
 import { useRouter } from "vue-router";
+// store
+import { sysUserStore } from '/@/store/modules/sys-user';
 export default defineComponent({
   components: {
     UserOutlined,
     LockOutlined,
   },
   setup() {
+    // 存储
+    const _sysUserStore = sysUserStore();
     const router = useRouter();
     const loginLoading = ref<Boolean>(false);
 
@@ -69,17 +73,17 @@ export default defineComponent({
       },
     });
 
+    /**
+     * @description 登录
+     */
     const submitHandleMeth = () => {
       loginLoading.value = true;
-      LoginController.loginApi(loginState.submitForm)
-        .then((res: CallBack.Response) => {
-          Message.success("登录成功");
-          loginLoading.value = false;
-          router.push("/");
-        })
-        .catch((err: any) => {
-          loginLoading.value = false;
-        });
+      _sysUserStore.USER_LOGIN(loginState.submitForm).then(result=>{
+        loginLoading.value = false;
+        router.push("/");
+      }).catch((err:any)=>{
+        loginLoading.value = false;
+      });
     };
 
     return {

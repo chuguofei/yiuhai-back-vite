@@ -1,5 +1,10 @@
 import { defineStore } from "pinia";
-
+import LoginController from "/@/api/system/login.ts";
+import HttpResultUtils from '/@/struct/common/http-result-utils';
+import { message as Message } from 'ant-design-vue';
+import { useRouter } from 'vue-router';
+import CookiesUtils from '/@/utils/cookies'
+import { loginStateStruct } from "/@/views/system/login/struct/login";
 /**
  * 登录用户的状态
  */
@@ -16,6 +21,37 @@ export const sysUserStore = defineStore({
     token: "",
     userInfo: {},
   }),
-  getters: {},
-  actions: {},
+  getters: {
+    getToken(): string {
+      return this.token;
+    },
+    getUserInfo(): SysUserStruct.sysUser {
+      return this.userInfo;
+    }
+  },
+  actions: {
+    /**
+     * 登录
+     * @param submitForm 
+     * @returns 
+     */
+    USER_LOGIN(submitForm?: Login.LoginStruct) {
+      const router = useRouter();
+      return new Promise((resolve, reject) => {
+        LoginController.loginApi(submitForm)
+          .then((result: CallBack.Response) => {
+            if (result.code == HttpResultUtils.SUCCESS) {
+              Message.success("登录成功");
+              this.token = result.data.token;
+              this.userInfo = result.data.userInfo;
+              CookiesUtils.setToken(result.data.token);
+            }
+            resolve(result);
+          })
+          .catch((err: any) => {
+            reject(err);
+          });
+      });
+    }
+  },
 });

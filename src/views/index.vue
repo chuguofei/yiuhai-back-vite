@@ -1,5 +1,12 @@
 <template>
-  <div>首页=-{{ _sysUserStore.counter }}</div>
+  <div>首页=-
+  <div>
+     {{ _sysUserStore.token }}
+    </div> 
+    <div>
+      {{ _sysUserStore.userInfo }}
+    </div>
+  </div>
 </template>
 
 <script lang="ts">

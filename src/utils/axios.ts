@@ -2,6 +2,7 @@ import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
 import { message as Message } from "ant-design-vue";
 import { get } from "lodash-es";
 import router from "../router/index";
+import CookiesUtils from '/@/utils/cookies';
 
 export default class MyAxios {
   public axios: AxiosInstance;
@@ -23,12 +24,14 @@ export default class MyAxios {
    * @description 拦截器
    */
   private onRequest() {
-    this.axios.interceptors.request.use((config: AxiosRequestConfig) => {
-      let options = {
-        startTime: new Date().getTime(),
-      };
+    this.axios.interceptors.request.use((config: any) => {
+      let _token = CookiesUtils.getToken();
+      if(!!_token){
+        config.headers.Authorization = _token;
+      }
+      config.startTime = new Date().getTime();
       // https://github.com/xiaoxian521/vue-pure-admin/blob/main/src/utils/http/config.ts
-      return { ...config, options };
+      return config;
     });
   }
 

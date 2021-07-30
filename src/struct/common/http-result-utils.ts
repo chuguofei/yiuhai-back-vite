@@ -10,11 +10,20 @@ export default class HttpResultUtils {
      * @param showErrMsg 
      * @returns 
      */
-    static isSuccess(result:CallBack.Response,showErrMsg:boolean): boolean {
-        if(result.code != 200){
+    static isSuccess(result: CallBack.Response, showErrMsg: boolean): boolean {
+        if (result.code != 200) {
             Message.error(result.msg);
         }
         return result.code == 200;
     }
+
+    /**
+     * 成功
+     */
+    public static SUCCESS: Number = 200;
+    /**
+     * 失败
+     */
+    public static FAIL: Number = 500;
 
 }
