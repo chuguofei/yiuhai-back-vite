@@ -9,8 +9,8 @@
           left: 0,
         }"
       >
-        <div style="border-bottom: 0px #ccc solid" class="text-center">
-          <img src="../../assets/logo.png" width="130"/>
+        <div class="text-center">
+          <img src="../../assets/logo.png" width="130" />
         </div>
         <MenuComponent :menuBarArr="menuBarArr"></MenuComponent>
       </a-layout-sider>

@@ -27,10 +27,16 @@ import {
   Layout,
   Slider,
   Breadcrumb,
-  Dropdown
+  Dropdown,
 } from "ant-design-vue";
-// version, install, message, notification, Affix, Anchor, AutoComplete, Alert, Avatar, BackTop, Badge, Breadcrumb, Button, Calendar, Card, Collapse, Carousel, Cascader, Checkbox, Col, DatePicker, Divider, Dropdown, Form, Icon, Input, InputNumber, Layout, List, LocaleProvider, Menu, Mentions, Modal, Pagination, Popconfirm, Popover, Progress, Radio, Rate, Row, Select, Slider, Spin, Statistic, Steps, Switch, Table, Transfer, Tree, TreeSelect, Tabs, Tag, TimePicker, Timeline, Tooltip, Upload, Drawer, Skeleton, Comment, ConfigProvider, Empty, Result, Descriptions, PageHeader, Space, Image, Typography,
-import "ant-design-vue/dist/antd.css";
+// version, install, message, notification, Affix, Anchor, AutoComplete,
+// Alert, Avatar, BackTop, Badge, Breadcrumb, Button, Calendar, Card, Collapse,
+// Carousel, Cascader, Checkbox, Col, DatePicker, Divider, Dropdown, Form, Icon,
+// Input, InputNumber, Layout, List, LocaleProvider, Menu, Mentions, Modal, Pagination,
+//  Popconfirm, Popover, Progress, Radio, Rate, Row, Select, Slider, Spin, Statistic,
+// Steps, Switch, Table, Transfer, Tree, TreeSelect, Tabs, Tag, TimePicker, Timeline,
+// Tooltip, Upload, Drawer, Skeleton, Comment, ConfigProvider, Empty, Result, Descriptions, PageHeader, Space, Image, Typography,
+// import "ant-design-vue/dist/antd.css";
 
 export function useAntd(app: App) {
   app.use(Button),
@@ -60,5 +66,5 @@ export function useAntd(app: App) {
     app.use(Layout),
     app.use(Slider),
     app.use(Breadcrumb),
-    app.use(Dropdown)
+    app.use(Dropdown);
 }

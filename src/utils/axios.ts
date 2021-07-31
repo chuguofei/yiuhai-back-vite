@@ -2,7 +2,7 @@ import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
 import { message as Message } from "ant-design-vue";
 import { get } from "lodash-es";
 import router from "../router/index";
-import CookiesUtils from '/@/utils/cookies';
+import CookiesUtils from "/@/utils/cookies";
 
 export default class MyAxios {
   public axios: AxiosInstance;
@@ -26,7 +26,7 @@ export default class MyAxios {
   private onRequest() {
     this.axios.interceptors.request.use((config: any) => {
       let _token = CookiesUtils.getToken();
-      if(!!_token){
+      if (!!_token) {
         config.headers.Authorization = _token;
       }
       config.startTime = new Date().getTime();
@@ -60,7 +60,7 @@ export default class MyAxios {
             router.replace("/login");
           }, 1000);
         }
-        return Promise.reject(msg);
+        return Promise.resolve(msg);
       },
       (error: any) => {
         console.log(
