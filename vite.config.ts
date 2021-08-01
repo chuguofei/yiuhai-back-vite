@@ -1,14 +1,16 @@
 import type { UserConfig } from "vite";
-import vue from "@vitejs/plugin-vue";
 import { resolve } from "path";
-// 按需导入组件库样式的插件
-import styleImport from "vite-plugin-style-import";
+import { MyPlugins } from "./plugins/index";
 
 function pathResolve(dir: string) {
   return resolve(process.cwd(), ".", dir);
 }
 
+const isDev = process.env.NODE_ENV === "development";
+
 const viteConfig: UserConfig = {
+  base: "/",
+  root: process.cwd(),
   build: {
     // 打包输出目录
     outDir: "dist",
@@ -17,7 +19,21 @@ const viteConfig: UserConfig = {
     // 小于此阈值的导入或引用资源将内联为 base64 编码，以避免额外的 http 请求,设置为 0 可以完全禁用此项。
     assetsInlineLimit: 4096,
     // 源码映射
-    sourcemap: true,
+    sourcemap: isDev ? true : false,
+    // 生产环境移除 console
+    terserOptions: {
+      compress: {
+        drop_console: true,
+        drop_debugger: true,
+      },
+    },
+    // 设置为false禁用缩小，或指定要使用的缩小器。默认为Terser，它速度较慢，但​​在大多数情况下会生成较小的包。
+    // Esbuild 缩小速度明显更快，但会产生稍大的包。
+    minify: isDev ? "esbuild" : "terser",
+    // 启用/禁用 brotli 压缩大小报告。压缩大型输出文件可能会很慢，因此禁用它可能会提高大型项目的构建性能。
+    brotliSize: false,
+    // 块大小警告的限制（以 kbs 为单位）,默认： 500
+    chunkSizeWarningLimit: 2000,
   },
   css: {
     preprocessorOptions: {
@@ -36,26 +52,7 @@ const viteConfig: UserConfig = {
     ],
     extensions: [".mjs", ".js", ".ts", ".jsx", ".tsx", ".json", ".vue"], //这加上.vue
   },
-  plugins: [
-    vue(),
-    styleImport({
-      libs: [
-        {
-          libraryName: "ant-design-vue",
-          esModule: true,
-          resolveStyle: (name) => {
-            return `ant-design-vue/es/${name}/style/index`;
-          },
-        },
-        {
-          libraryName: "vxe-table",
-          esModule: true,
-          resolveComponent: (name) => `vxe-table/es/${name}`,
-          resolveStyle: (name) => `vxe-table/es/${name}/style.css`,
-        },
-      ],
-    }),
-  ],
+  plugins: MyPlugins(),
   server: {
     proxy: {
       "/blogapi/": {
