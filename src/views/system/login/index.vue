@@ -7,15 +7,20 @@
           <div class="text-center margin-bottom-15 font-bold font-18 enter-x">
             GF后台管理系统
           </div>
-          <a-form :form="submitForm" :wrapper-col="{ span: 24 }">
-            <a-form-item class="enter-x">
+          <a-form
+            ref="formRef"
+            :model="submitForm"
+            :rules="rules"
+            :wrapper-col="{ span: 24 }"
+          >
+            <a-form-item class="enter-x" name="username">
               <a-input v-model:value="submitForm.username" :maxLength="11" allowClear>
                 <template #prefix
                   ><UserOutlined style="color: rgba(0, 0, 0, 0.25)"
                 /></template>
               </a-input>
             </a-form-item>
-            <a-form-item class="enter-x">
+            <a-form-item class="enter-x" name="password">
               <a-input
                 v-model:value="submitForm.password"
                 type="password"
@@ -29,10 +34,10 @@
             </a-form-item>
             <a-form-item class="enter-x">
               <a-button
+                @click="submitHandleMeth()"
                 :loading="loginLoading"
                 block
                 type="primary"
-                @click="submitHandleMeth()"
                 >登录</a-button
               >
             </a-form-item>
@@ -50,11 +55,9 @@ import { UserOutlined, LockOutlined } from "@ant-design/icons-vue";
 // struct
 import { loginStateStruct } from "./struct/login";
 // api
-import LoginController from "/@/api/system/login.ts";
 import { message as Message } from "ant-design-vue";
-import { useRouter } from "vue-router";
 // store
-import { sysUserStore } from '/@/store/modules/sys-user';
+import { sysUserStore } from "/@/store/modules/sys-user";
 export default defineComponent({
   components: {
     UserOutlined,
@@ -63,7 +66,6 @@ export default defineComponent({
   setup() {
     // 存储
     const _sysUserStore = sysUserStore();
-    const router = useRouter();
     const loginLoading = ref<Boolean>(false);
 
     const loginState: loginStateStruct = reactive({
@@ -71,24 +73,38 @@ export default defineComponent({
         username: "",
         password: "",
       },
+      rules: {
+        username: [{ required: true, message: "请输入用户名！", trigger: "blur" }],
+        password: [{ required: true, message: "请输入密码！", trigger: "blur" }],
+      },
     });
 
     /**
      * @description 登录
      */
+    const formRef = ref();
     const submitHandleMeth = () => {
-      loginLoading.value = true;
-      _sysUserStore.USER_LOGIN(loginState.submitForm).then(result=>{
-        loginLoading.value = false;
-      }).catch((err:any)=>{
-        loginLoading.value = false;
-      });
+      formRef.value
+        .validate()
+        .then(() => {
+          loginLoading.value = true;
+          _sysUserStore
+            .USER_LOGIN(loginState.submitForm)
+            .then((result) => {
+              loginLoading.value = false;
+            })
+            .catch((err: any) => {
+              loginLoading.value = false;
+            });
+        })
+        .catch((error: any) => {});
     };
 
     return {
       ...toRefs(loginState),
       submitHandleMeth,
       loginLoading,
+      formRef,
     };
   },
 });
@@ -158,6 +174,13 @@ $login-body-left-img: url("/@/assets/images/login/login-body-left.svg");
     & .domain {
       user-select: none;
     }
+  }
+}
+</style>
+<style lang="scss">
+.ant-form-item-control-wrapper .ant-input-affix-wrapper {
+  .ant-input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0px 1000px #fff inset !important;
   }
 }
 </style>
