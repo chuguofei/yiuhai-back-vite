@@ -9,7 +9,7 @@ const route = [
   },
   {
     path: "/",
-    component: () => import("/@/views/index"),
+    component: () => import("/@/views/index.vue"),
   },
   {
     path: "/blog",
@@ -52,7 +52,9 @@ const route = [
 ];
 
 const router = createRouter({
-  history: createWebHashHistory(),
+  history: createWebHashHistory("/"),
   routes: route,
+  strict: true,
+  scrollBehavior: () => ({ left: 0, top: 0 }),
 });
 export default router;

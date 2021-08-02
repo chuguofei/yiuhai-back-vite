@@ -1,6 +1,6 @@
 import type { UserConfig } from "vite";
 import { resolve } from "path";
-import { MyPlugins } from "./plugins/index";
+import { MyPlugins } from "./build/index";
 
 function pathResolve(dir: string) {
   return resolve(process.cwd(), ".", dir);
@@ -12,6 +12,8 @@ const viteConfig: UserConfig = {
   base: "/",
   root: process.cwd(),
   build: {
+    // 设置最终构建的浏览器兼容目标。
+    target: 'es2015',
     // 打包输出目录
     outDir: "dist",
     // 指定生成静态资源的存放路径
@@ -20,11 +22,13 @@ const viteConfig: UserConfig = {
     assetsInlineLimit: 4096,
     // 源码映射
     sourcemap: isDev ? true : false,
-    // 生产环境移除 console
     terserOptions: {
       compress: {
+        // 打包自动删除console
         drop_console: true,
         drop_debugger: true,
+        // 对代码压缩的次数，默认是1，压缩次数越多，时间越长
+        passes: 100,
       },
     },
     // 设置为false禁用缩小，或指定要使用的缩小器。默认为Terser，它速度较慢，但​​在大多数情况下会生成较小的包。
@@ -50,7 +54,7 @@ const viteConfig: UserConfig = {
         replacement: pathResolve("src") + "/",
       },
     ],
-    extensions: [".mjs", ".js", ".ts", ".jsx", ".tsx", ".json", ".vue"], //这加上.vue
+    // extensions: [".js", ".ts", ".vue"], //这加上.vue
   },
   plugins: MyPlugins(),
   server: {
