@@ -22,7 +22,7 @@
     >
       <template #articleTags="{ text }">{{ text }}</template>
       <template #handle="{ record }">
-        <a-button class="margin-right-10">详情</a-button>
+        <a-button class="margin-right-10" @click="btnHandleMeth('details', record)">详情</a-button>
         <a-button
           class="btn-warning margin-right-10"
           @click="btnHandleMeth('edit', record)"
@@ -104,6 +104,9 @@ export default defineComponent({
           Message.success(result.msg);
           getAritcleListMeth(); // 刷新列表
         });
+      } else if(type == 'details'){
+        // 博客详情 
+        window.open(`http://www.guofeian.cn/article_details/${row.id}`)
       }
     };
 
